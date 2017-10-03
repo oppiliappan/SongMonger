@@ -9,6 +9,7 @@ private:
 	int isfav, duration, views;
 public:
 	void dispData();
+	void favit();
 };
 
 class Playlist{
@@ -17,7 +18,20 @@ private:
 	Song songlist[10];
 public:
 	void dispSongs();
+	void addSongs();
+	static int songcount;
 };
+
+int Playlist::songcount = 0;
+
+void Playlist::dispSongs(){
+	for(int i=0; i<Playlist::songcount; i++){
+		songlist[i].dispData();
+	}
+}
+void Playlist::addSongs(){
+
+}
 
 class User{
 private:
