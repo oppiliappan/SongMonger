@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -18,6 +19,7 @@ public:
 	}
 	void dispData();
 	void favit();
+	void editData(int);
 };
 
 void Song::dispData(){
@@ -27,6 +29,12 @@ void Song::dispData(){
 void Song::favit(){
 	if(isfav == 0) isfav = 1;
 	else isfav = 0;
+}
+
+void Song::editData(int x){
+	if(x == 1){
+		cout<<"\nEnter new title: ";
+	}
 }
 
 class Playlist{
