@@ -2,8 +2,6 @@
 #include <fstream>
 #include <string.h>
 #include <stdlib.h>
-
-
 using namespace std;
 
 // How about making this a queue?
@@ -35,7 +33,7 @@ void Song::addData(){
 }
 // Display formatted song data
 void Song::dispData(){
-	cout<<title<<"\t"<<artist<<"\t"<<album<<"\t"<<duration;
+	cout<<title<<"\t"<<artist<<"\t"<<album<<"\t"<<duration<<"\n";
 }
 
 // Favorite your songs
@@ -84,7 +82,7 @@ public:
 
 	// depends on an incomplete function
 	void addSong(); //Songs --> Song because one song at a time
-
+	void delSong(); // New and done
 	static int songcount;
 };
 
@@ -97,21 +95,33 @@ void Playlist::dispPlayName() {
 
 void Playlist::dispSongs() {
 	for(int i=0; i<Playlist::songcount; i++){
+		cout << i + 1 << " ";
 		songlist[i].dispData();
 	}
 }
 
-// Is a recursive function
+//  ̶I̶s̶ ̶a̶ ̶r̶e̶c̶u̶r̶s̶i̶v̶e̶ ̶f̶u̶n̶c̶t̶i̶o̶n̶ Simplified
 // Depends on addData()
 void Playlist::addSong() {
 	char ch;
-	songlist[songcount].addData();
-	songcount++;
-	cout << "Add more? [Y/n] ";
+	do {
+		songlist[songcount].addData();
+		songcount++;
+		cout << "Add more? [Y/n] ";
+		cin >> ch;
+	} while(ch == 'y');
+}
+
+void Playlist::delSong() {
+	int ch;
+	cout << "Which one? ";
+	dispSongs();
+	cout << "Enter choice: ";
 	cin >> ch;
-	if (ch == 'y') {
-		addSong();
+	for (int i = ch; i < songcount; i++) {
+		if(i < sizeof(songlist)/2) songlist[i] = songlist[i + 1]; // if prevents segmentation faults
 	}
+	songcount--;
 }
 
 // Generally incomplete
@@ -119,6 +129,7 @@ class User{
 private:
 	char username[10];
 	Playlist play[10];// Can users have songs which dont belong to any playlist?
+	// Yes. There should be a library. Playlists can be created only from songs in library.
 public:
 	void dispDetails();
 	void addPlaylist();
@@ -129,7 +140,7 @@ public:
 
 int User::playcount = 0;
 
-void User::dispDetails(){
+void User::dispDetails() {
 	cout<<"\nName: "<<username;
 	cout<<"\nPlaylists: ";
 	for(int i=0; i<playcount; i++){
@@ -137,6 +148,9 @@ void User::dispDetails(){
 	}
 }
 
+void User::addPlaylist() {
+
+}
 
 int main(){
 	return 0;
