@@ -69,11 +69,10 @@ void Song::editData(int x){
 	}
 }
 
-class Playlist{
+class Library{
 protected:
 	Song songlist[20];
 public:
-	Playlist();
 	void dispSongs(); // complete
 
 	// depends on an incomplete function
@@ -82,10 +81,10 @@ public:
 	static int songcount;
 };
 
-int Playlist::songcount = 0;
+int Library::songcount = 0;
 
-void Playlist::dispSongs() {
-	for(int i=0; i<Playlist::songcount; i++){
+void Library::dispSongs() {
+	for(int i=0; i<Library::songcount; i++){
 		cout << i + 1 << ". ";
 		songlist[i].dispData();
 	}
@@ -93,7 +92,7 @@ void Playlist::dispSongs() {
 
 //  ̶I̶s̶ ̶a̶ ̶r̶e̶c̶u̶r̶s̶i̶v̶e̶ ̶f̶u̶n̶c̶t̶i̶o̶n̶ Simplified
 // Depends on addData()
-void Playlist::addSong() {
+void Library::addSong() {
 	char ch;
 	do {
 		songlist[songcount].addData();
@@ -103,7 +102,7 @@ void Playlist::addSong() {
 	} while(ch == 'y');
 }
 
-void Playlist::delSong() {
+void Library::delSong() {
 	int ch;
 	cout << "Which one?\n";
 	dispSongs();
@@ -116,44 +115,46 @@ void Playlist::delSong() {
 }
 
 // Inheriting Class
-class Userlist: public Playlist {
+class Playlist: public Library {
 private:
 	char playname[20];
 public:
-	Userlist() {
-		playname = strcpy("UNTITLED");
+	Playlist() {
+		strcpy(playname, "UNTITLED");
 	}
 	void setPlayName();
 	void dispPlayName(); // complete
+	void addSong();
+	void delSong();
 };
 
-void Userlist::setPlayName() {
+void Playlist::setPlayName() {
 	cout << "Enter playlist name: ";
 	fgets(playname, 20, stdin);
 }
 
-void Userlist::dispPlayName() {
+void Playlist::dispPlayName() {
 	puts(playname);
 	cout << "\t\t" << songcount << "Song(s)";
 }
 
 // Is this function overloading attempt correct?
-// It (ideally) overloads the definition from the Playlist class
-void Userlist::addSong() {
+// It (ideally) overloads the definition from the Library class
+void Playlist::addSong() {
 	int ch;
 	do {
 		cout << "Add what? ";
 		dispSongs();
 		cin >> ch;
-		Playlist::songlist[songcount] = Userlist::songlist[ch]; // Is this correct? Not sure about this
-		Userlist::songcount++;
+		Library::songlist[songcount] = Playlist::songlist[ch]; // Is this correct? Not sure about this
+		Playlist::songcount++;
 		cout << "Add more? [1. Yes! 2. No] ";
 		cin >> ch;
 	} while(ch == 1);
 }
 
 // Is this function overloading attempt also correct?
-void Userlist::delSong() {
+void Playlist::delSong() {
 	int ch;
 	cout << "Which one?\n";
 	dispSongs();
@@ -169,12 +170,13 @@ void Userlist::delSong() {
 class User {
 private:
 	char username[10];
-	Playlist play[10];// Can users have songs which don't belong to any playlist?
-	// Yes. There should be a library. Playlists can be created only from songs in library.
+	Library songs;
+	Playlist plists[10];
+
 public:
 	void dispDetails();
-	void addPlaylist();
-	void viewPlaylist(char);
+	void addLibrary();
+	void viewLibrary(char);
 
 	static int playcount;
 }user1, user2, user3;
@@ -183,13 +185,13 @@ int User::playcount = 0;
 
 void User::dispDetails() {
 	cout<<"\nName: "<<username;
-	cout<<"\nPlaylists: ";
+	cout<<"\nSongs: ";
 	for(int i=0; i<playcount; i++){
 		play[i].dispPlayName();
 	}
 }
 
-void User::addPlaylist() {
+void User::addLibrary() {
 
 }
 
