@@ -70,14 +70,10 @@ void Song::editData(int x){
 }
 
 class Playlist{
-private:
-	char playname[20];
-	Song songlist[10];
+protected:
+	Song songlist[20];
 public:
-	Playlist() {
-		strcpy(playname, "UNTITLED");
-	}
-	void dispPlayName(); // complete
+	Playlist();
 	void dispSongs(); // complete
 
 	// depends on an incomplete function
@@ -88,14 +84,9 @@ public:
 
 int Playlist::songcount = 0;
 
-void Playlist::dispPlayName() {
-	puts(playname);
-	cout << "\t\t" << songcount << "Song(s)";
-}
-
 void Playlist::dispSongs() {
 	for(int i=0; i<Playlist::songcount; i++){
-		cout << i + 1 << " ";
+		cout << i + 1 << ". ";
 		songlist[i].dispData();
 	}
 }
@@ -114,21 +105,71 @@ void Playlist::addSong() {
 
 void Playlist::delSong() {
 	int ch;
-	cout << "Which one? ";
+	cout << "Which one?\n";
 	dispSongs();
 	cout << "Enter choice: ";
 	cin >> ch;
 	for (int i = ch; i < songcount; i++) {
-		if(i < sizeof(songlist)/2) songlist[i] = songlist[i + 1]; // if prevents segmentation faults
+		if(i < sizeof(songlist)/2) songlist[i] = songlist[i + 1]; // if statement prevents segmentation faults
+	}
+	songcount--;
+}
+
+// Inheriting Class
+class Userlist: public Playlist {
+private:
+	char playname[20];
+public:
+	Userlist() {
+		playname = strcpy("UNTITLED");
+	}
+	void setPlayName();
+	void dispPlayName(); // complete
+};
+
+void Userlist::setPlayName() {
+	cout << "Enter playlist name: ";
+	fgets(playname, 20, stdin);
+}
+
+void Userlist::dispPlayName() {
+	puts(playname);
+	cout << "\t\t" << songcount << "Song(s)";
+}
+
+// Is this function overloading attempt correct?
+// It (ideally) overloads the definition from the Playlist class
+void Userlist::addSong() {
+	int ch;
+	do {
+		cout << "Add what? ";
+		dispSongs();
+		cin >> ch;
+		Playlist::songlist[songcount] = Userlist::songlist[ch]; // Is this correct? Not sure about this
+		Userlist::songcount++;
+		cout << "Add more? [1. Yes! 2. No] ";
+		cin >> ch;
+	} while(ch == 1);
+}
+
+// Is this function overloading attempt also correct?
+void Userlist::delSong() {
+	int ch;
+	cout << "Which one?\n";
+	dispSongs();
+	cout << "Enter choice: ";
+	cin >> ch;
+	for (int i = ch; i < songcount; i++) {
+		if(i < sizeof(songlist)/2) songlist[i] = songlist[i + 1]; // if statement prevents segmentation faults
 	}
 	songcount--;
 }
 
 // Generally incomplete
-class User{
+class User {
 private:
 	char username[10];
-	Playlist play[10];// Can users have songs which dont belong to any playlist?
+	Playlist play[10];// Can users have songs which don't belong to any playlist?
 	// Yes. There should be a library. Playlists can be created only from songs in library.
 public:
 	void dispDetails();
