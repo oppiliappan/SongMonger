@@ -27,13 +27,19 @@ public:
 // Enter song data for the first time
 void Song::addData(){
 	cout<<"\nEnter title:";
+	fgets(title, 20, stdin);
 	cout<<"\nEnter artist: ";
+	fgets(artist, 20, stdin);
 	cout<<"\nEnter album: ";
-	cout<<"\nEnter duration: ";
+	fgets(album, 20, stdin);
+	cout<<"\nEnter duration (sec.): ";
+	cin>>duration;
 }
 // Display formatted song data
 void Song::dispData(){
-	cout<<title<<"\t"<<artist<<"\t"<<album<<"\t"<<duration<<"\n";
+	cout<<title<<"\t"<<artist<<"\t"<<album<<"\t"<<duration;
+	if(isfav == 1)cout<<" *\n";
+	else cout<<"\n";
 }
 
 // Favorite your songs
@@ -90,7 +96,6 @@ void Library::dispSongs() {
 	}
 }
 
-//  ̶I̶s̶ ̶a̶ ̶r̶e̶c̶u̶r̶s̶i̶v̶e̶ ̶f̶u̶n̶c̶t̶i̶o̶n̶ Simplified
 // Depends on addData()
 void Library::addSong() {
 	char ch;
@@ -135,7 +140,7 @@ void Playlist::setPlayName() {
 
 void Playlist::dispPlayName() {
 	puts(playname);
-	cout << "\t\t" << songcount << "Song(s)";
+	cout << "\t\t" << songcount << "song(s)";
 }
 
 // Is this function overloading attempt correct?
@@ -146,7 +151,7 @@ void Playlist::addSong() {
 		cout << "Add what? ";
 		dispSongs();
 		cin >> ch;
-		Library::songlist[songcount] = Playlist::songlist[ch]; // Is this correct? Not sure about this
+		Library::songlist[songcount+1] = Playlist::songlist[ch]; // n + 1 is vacant, add song there
 		Playlist::songcount++;
 		cout << "Add more? [1. Yes! 2. No] ";
 		cin >> ch;
@@ -175,24 +180,31 @@ private:
 
 public:
 	void dispDetails();
-	void addLibrary();
-	void viewLibrary(char);
+	void addToLibrary();
+	void viewLibrary();
 
-	static int playcount;
+	static int playlistcount;
 }user1, user2, user3;
 
-int User::playcount = 0;
+int User::playlistcount= 0;
 
 void User::dispDetails() {
 	cout<<"\nName: "<<username;
-	cout<<"\nSongs: ";
-	for(int i=0; i<playcount; i++){
-		play[i].dispPlayName();
+	cout<<"\nSongs: \n";
+	songs.dispSongs();
+	cout<<"\nPlaylists: ";
+	for(int i=0; i<playlistcount; i++){
+		plists[i].dispPlayName();
 	}
 }
 
-void User::addLibrary() {
+void User::addToLibrary() {
+	songs.addSong();
+	cout<<"\nYou currently have "<<Library::songcount<<" songs\n";
+}
 
+void User::viewLibrary(){
+	songs.dispSongs();
 }
 
 int main(){
