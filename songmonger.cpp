@@ -38,7 +38,7 @@ void Song::addData(){
 // Display formatted song data
 void Song::dispData(){
 	cout<<title<<"\t"<<artist<<"\t"<<album<<"\t"<<duration;
-	if(isfav == 1)cout<<" *\n";
+	if(isfav == 1)cout<<"\t*\n";
 	else cout<<"\n";
 }
 
@@ -171,7 +171,6 @@ void Playlist::delSong() {
 	songcount--;
 }
 
-// Generally incomplete
 class User {
 private:
 	char username[10];
@@ -184,17 +183,23 @@ public:
 	void viewLibrary();
 
 	static int playlistcount;
-}user1, user2, user3;
+}users[5];
 
 int User::playlistcount= 0;
 
 void User::dispDetails() {
 	cout<<"\nName: "<<username;
 	cout<<"\nSongs: \n";
-	songs.dispSongs();
+	if ((Library::songcount) == 0) cout<<"No songs\n";
+	else{
+		songs.dispSongs();
+	}
 	cout<<"\nPlaylists: ";
-	for(int i=0; i<playlistcount; i++){
-		plists[i].dispPlayName();
+	if (User::playlistcount == 0) cout<<"No playlists\n";
+	else{
+		for(int i=0; i<playlistcount; i++){
+			plists[i].dispPlayName();
+		}
 	}
 }
 
@@ -208,5 +213,10 @@ void User::viewLibrary(){
 }
 
 int main(){
+	cout<<"\t\t\tWelcome to SongMonger!\n";
+	cout<<"Select user\n";
+	for(int i=0; i<5; i++){
+		users[i].dispDetails();
+	}
 	return 0;
 }
