@@ -217,23 +217,80 @@ void User::viewLibrary(){
 
 int main(){
 	cout<<"\t\t\tWelcome to SongMonger!\n";
-	char quit_program = '\0';
+
+	/*
+	TODO
+	1. User abc
+	2. User xyz
+	Choose option
+		Welcome User abc
+			Name: abc
+			Songs:
+				1.
+				2.
+				3.
+			Playlists:
+				1.
+				2.
+				3.
+			1. Library actions
+			2. Playlist actions
+			3. Logout
+			Enter option
+				Library actions
+					1. Add song
+					2. Edit song
+					3. Delete song
+					4. Back
+
+					Playlist actions
+					1. Create new playlist
+					2. Edit existing playlist
+					3. Delete playlist
+					4. Back
+	*/
+
+
+	// enter user select
+	char quit_program = 'n';
 	do{
 		cout<<"Select user\n";
 		for(int i=0; i<5; i++){
+			cout<<i<<" ";
 			users[i].getUsername();
 		}
-		int choose_user = 0;
+
+		int choose_user = -1;
 		cin>>choose_user;
-		char logout = '\0';
+		choose_user--; // convert to array index
+
+		// enter user actions
+		char logout = 'n';
 		do{
 			users[choose_user].dispDetails();
+			cout<<"1. Library actions\n";
+			cout<<"2. Playlist actions\n";
+			cout<<"3. Back to user select\n";
 			cout<<"\n What would you like to do?\n";
-			cout<<"1. Add songs Library\n";
-			cout<<"2. Delete songs from Library\n";
-			cout<<"3. Modify songs in Library\n";
-		}while(logout == 'y');
-	}while(quit_program == 'y');
+
+			int user_action;
+			cin>>user_action;
+
+			// enter specific actions
+			char exit_actions='n';
+			do{
+				switch(user_action){
+					case 1:{
+						cout<<"\nLibrary actions\n";
+						cout<<"1. Add songs\n";
+						cout<<"2. Edit songs\n";
+						cout<<"3. Delete songs\n";
+						cout<<"4. Back\n";
+					}
+				}
+			}while(exit_actions == 'n');
+		}while(logout == 'n');
+	}while(quit_program == 'n');
 
 	return 0;
 }
