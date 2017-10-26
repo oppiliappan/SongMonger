@@ -113,7 +113,7 @@ void Library::delSong() {
 	dispSongs();
 	cout << "Enter choice: ";
 	cin >> ch;
-	for (int i = ch; i < songcount; i++) {
+	for (int i=ch; i<songcount; i++) {
 		if(i < sizeof(songlist)/2) songlist[i] = songlist[i + 1]; // if statement prevents segmentation faults
 	}
 	songcount--;
@@ -165,7 +165,7 @@ void Playlist::delSong() {
 	dispSongs();
 	cout << "Enter choice: ";
 	cin >> ch;
-	for (int i = ch; i < songcount; i++) {
+	for (int i=ch; i<songcount; i++) {
 		if(i < sizeof(songlist)/2) songlist[i] = songlist[i + 1]; // if statement prevents segmentation faults
 	}
 	songcount--;
@@ -178,6 +178,9 @@ private:
 	Playlist plists[10];
 
 public:
+	void getUsername(){
+		cout<<username;
+	}
 	void dispDetails();
 	void addToLibrary();
 	void viewLibrary();
@@ -194,7 +197,7 @@ void User::dispDetails() {
 	else{
 		songs.dispSongs();
 	}
-	cout<<"\nPlaylists: ";
+	cout<<"\nPlaylists: \n";
 	if (User::playlistcount == 0) cout<<"No playlists\n";
 	else{
 		for(int i=0; i<playlistcount; i++){
@@ -214,9 +217,23 @@ void User::viewLibrary(){
 
 int main(){
 	cout<<"\t\t\tWelcome to SongMonger!\n";
-	cout<<"Select user\n";
-	for(int i=0; i<5; i++){
-		users[i].dispDetails();
-	}
+	char quit_program = '\0';
+	do{
+		cout<<"Select user\n";
+		for(int i=0; i<5; i++){
+			users[i].getUsername();
+		}
+		int choose_user = 0;
+		cin>>choose_user;
+		char logout = '\0';
+		do{
+			users[choose_user].dispDetails();
+			cout<<"\n What would you like to do?\n";
+			cout<<"1. Add songs Library\n";
+			cout<<"2. Delete songs from Library\n";
+			cout<<"3. Modify songs in Library\n";
+		}while(logout == 'y');
+	}while(quit_program == 'y');
+
 	return 0;
 }
