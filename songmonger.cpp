@@ -178,17 +178,31 @@ private:
 	Playlist plists[10];
 
 public:
+	User() {
+		strcpy("Jawn_dough", username);
+		isactivated = 'n';
+	}
 	void getUsername(){
 		cout<<username;
 	}
+	void setup(); // For the first time setup
 	void dispDetails();
 	void addToLibrary();
 	void viewLibrary();
-
-	static int playlistcount;
+	static int usercount; // This is the static variable we deserve
+	int playlistcount; // Why was this static? Playlists should be local to that user only
+	char isactivated; // Self explanatory
 }users[5];
 
-int User::playlistcount= 0;
+int User::usercount = 0;
+
+void User::setup() {
+	cout << "Enter your username (No spaces or special characters): ";
+	cin >> username;
+	usercount++;
+	isactivated = 'y';
+	cout << "Now let's get songmongering!";
+}
 
 void User::dispDetails() {
 	cout<<"\nName: "<<username;
@@ -215,11 +229,14 @@ void User::viewLibrary(){
 	songs.dispSongs();
 }
 
+
+/* -------------------------- MAIN ----------------------------- */
 int main(){
 	cout<<"\t\t\tWelcome to SongMonger!\n";
 
 	/*
 	TODO
+	You forgot this ----> 1. New User 2. Existing user
 	1. User abc
 	2. User xyz
 	Choose option
@@ -254,9 +271,25 @@ int main(){
 	// enter user select
 	char quit_program = 'n';
 	do{
+		char ch;
+		cout << "1. New User\n2. Existing User\n";
+		cin >> ch;
+		if (ch == '1') {
+			int i = 0;
+			// looks for the last unused account
+			while (user[i].isactivated == 'y') {
+				if (i == 4) {
+					cout << "User limit exceeded!";
+					break;
+				}
+				i++;
+			}
+			useer[i].setup();
+		}
+		
 		cout<<"Select user\n";
-		for(int i=0; i<5; i++){
-			cout<<i<<" ";
+		for(int i=0; i<user[0].usercount; i++){ // This will make sure only existing users show up
+			cout << i + 1 << " ";
 			users[i].getUsername();
 		}
 
