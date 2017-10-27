@@ -179,19 +179,19 @@ private:
 
 public:
 	User() {
-		strcpy("Jawn_dough", username);
+		strcpy(username, "Jawn_dough");
 		isactivated = 'n';
 	}
 	void getUsername(){
 		cout<<username;
 	}
-	void setup(); // For the first time setup
+	void setup(); // for the first time setup
 	void dispDetails();
 	void addToLibrary();
 	void viewLibrary();
-	static int usercount; // This is the static variable we deserve
-	int playlistcount; // Why was this static? Playlists should be local to that user only
-	char isactivated; // Self explanatory
+	static int usercount; // this is the static variable we deserve
+	int playlistcount;
+	char isactivated; // Self explanatory - high quality comment
 }users[5];
 
 int User::usercount = 0;
@@ -277,18 +277,19 @@ int main(){
 		if (ch == '1') {
 			int i = 0;
 			// looks for the last unused account
-			while (user[i].isactivated == 'y') {
+			while (users[i].isactivated == 'y') {
 				if (i == 4) {
 					cout << "User limit exceeded!";
 					break;
 				}
 				i++;
 			}
-			useer[i].setup();
+			users[i].setup();
 		}
-		
+
 		cout<<"Select user\n";
-		for(int i=0; i<user[0].usercount; i++){ // This will make sure only existing users show up
+		for(int i=0; i<users[0].usercount; i++){
+			// this will make sure only existing users show up
 			cout << i + 1 << " ";
 			users[i].getUsername();
 		}
@@ -319,11 +320,29 @@ int main(){
 						cout<<"2. Edit songs\n";
 						cout<<"3. Delete songs\n";
 						cout<<"4. Back\n";
+
+						int lib_action;
+						cin>>lib_action;
+
+						// enter lib actions
+						char quit_lib_actions = 'n';
+						do{
+							switch(lib_action){
+								case 1:
+									users[choose_user].addToLibrary();
+									break;
+								case 2:
+									// aaaaaa we dont have and edit function
+									break;
+								case 3:
+									// we dont have a delete function either aaaaaa
+							}
+						}while()
 					}
 				}
-			}while(exit_actions == 'n');
-		}while(logout == 'n');
-	}while(quit_program == 'n');
+			} while (exit_actions == 'n');
+		} while (logout == 'n');
+	} while (quit_program == 'n');
 
 	return 0;
 }
