@@ -267,7 +267,6 @@ int main(){
 					4. Back
 	*/
 
-
 	// enter user select
 	char quit_program = 'n';
 	do{
@@ -332,17 +331,58 @@ int main(){
 									users[choose_user].addToLibrary();
 									break;
 								case 2:
-									// aaaaaa we dont have and edit function
+									// aaaaaa we dont have an edit function
 									break;
 								case 3:
+									break;
 									// we dont have a delete function either aaaaaa
+								case 4:
+									quit_lib_actions = 'y';
+									break;
+								default:
+									cout<<"Invalid option\n";
+									cout<<"Would you like to quit? (y/n)\n";
+									cin>>quit_lib_actions;
 							}
-						}while()
+						} while (quit_lib_actions == 'n');
+						break;
+					}
+					case 2:{
+						cout<<"\nPlaylist actions\n";
+						cout<<"1. Create playlist\n";
+						cout<<"2. Edit existing playlist\n";
+						cout<<"3. Delete playlist\n";
+
+						int play_action;
+						cin>>play_action;
+
+						// enter lib actions
+						char quit_play_actions = 'n';
+						do{
+							switch(play_action){
+								case 1:
+									users[choose_user].addToLibrary();
+									break;
+								case 2:
+									// aaaaaa we dont have an edit function
+									break;
+								case 3:
+									break;
+									// we dont have a delete function either aaaaaa
+								case 4:
+									quit_play_actions = 'y';
+									break;
+								default:
+									cout<<"Invalid option\n";
+									cout<<"Would you like to quit? (y/n)\n";
+									cin>>quit_play_actions;
+							}
+						} while (quit_play_actions == 'n');
+						break;
 					}
 				}
 			} while (exit_actions == 'n');
 		} while (logout == 'n');
 	} while (quit_program == 'n');
-
 	return 0;
 }
