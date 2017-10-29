@@ -98,7 +98,7 @@ void Library::dispSongs() {
 
 // Depends on addData()
 void Library::addSong() {
-	char ch;
+	char ch = 'n';
 	do {
 		songlist[songcount].addData();
 		songcount++;
@@ -289,7 +289,7 @@ int main(){
 		cout<<"Select user\n";
 		for(int i=0; i<users[0].usercount; i++){
 			// this will make sure only existing users show up
-			cout << i + 1 << " ";
+			cout << '\n' << i + 1 << " ";
 			users[i].getUsername();
 		}
 
@@ -314,18 +314,19 @@ int main(){
 			do{
 				switch(user_action){
 					case 1:{
-						cout<<"\nLibrary actions\n";
-						cout<<"1. Add songs\n";
-						cout<<"2. Edit songs\n";
-						cout<<"3. Delete songs\n";
-						cout<<"4. Back\n";
-
-						int lib_action;
-						cin>>lib_action;
 
 						// enter lib actions
 						char quit_lib_actions = 'n';
 						do{
+							cout<<"\nLibrary actions\n";
+							cout<<"1. Add songs\n";
+							cout<<"2. Edit songs\n";
+							cout<<"3. Delete songs\n";
+							cout<<"4. Back\n";
+
+							int lib_action;
+							cin>>lib_action;
+
 							switch(lib_action){
 								case 1:
 									users[choose_user].addToLibrary();
@@ -341,24 +342,25 @@ int main(){
 									break;
 								default:
 									cout<<"Invalid option\n";
-									cout<<"Would you like to quit? (y/n)\n";
-									cin>>quit_lib_actions;
+									break;
 							}
+							cout<<"Go back? (y/n)\n";
+							cin>>quit_lib_actions;
 						} while (quit_lib_actions == 'n');
 						break;
 					}
 					case 2:{
-						cout<<"\nPlaylist actions\n";
-						cout<<"1. Create playlist\n";
-						cout<<"2. Edit existing playlist\n";
-						cout<<"3. Delete playlist\n";
 
-						int play_action;
-						cin>>play_action;
-
-						// enter lib actions
+						// enter play actions
 						char quit_play_actions = 'n';
 						do{
+							cout<<"\nPlaylist actions\n";
+							cout<<"1. Create playlist\n";
+							cout<<"2. Edit existing playlist\n";
+							cout<<"3. Delete playlist\n";
+							int play_action;
+							cin>>play_action;
+
 							switch(play_action){
 								case 1:
 									users[choose_user].addToLibrary();
@@ -374,9 +376,9 @@ int main(){
 									break;
 								default:
 									cout<<"Invalid option\n";
-									cout<<"Would you like to quit? (y/n)\n";
-									cin>>quit_play_actions;
 							}
+							cout<<"Would you like to quit? (y/n)\n";
+							cin>>quit_play_actions;
 						} while (quit_play_actions == 'n');
 						break;
 					}
