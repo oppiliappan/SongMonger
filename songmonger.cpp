@@ -57,17 +57,13 @@ void Song::favit(){
 void Song::editData(int x){
 	if(x == 1) {
 		cout<<"\nEnter new title: ";
-	}
-	else if(x == 2) {
+	} else if(x == 2) {
 		cout<<"\nEnter new album name: ";
-	}
-	else if(x == 3) {
+	} else if(x == 3) {
 		cout<<"\nEnter new artist name: ";
-	}
-	else if(x == 4) {
+	} else if(x == 4) {
 		cout<<"\nEnter new duration: ";
-	}
-	else {
+	} else {
 		cout<<"\nInvalid option. Try again";
 		cout<<"\nEnter the option";
 		cin>>x;
@@ -189,6 +185,7 @@ public:
 	void dispDetails();
 	void addToLibrary();
 	void viewLibrary();
+	void delFromLibrary();
 	static int usercount; // this is the static variable we deserve
 	int playlistcount;
 	char isactivated; // Self explanatory - high quality comment
@@ -227,6 +224,10 @@ void User::addToLibrary() {
 
 void User::viewLibrary(){
 	songs.dispSongs();
+}
+
+void deleteSong(){
+	songs.delSong();
 }
 
 
@@ -335,8 +336,8 @@ int main(){
 									// aaaaaa we dont have an edit function
 									break;
 								case 3:
+									users.[choose_user].delFromLibrary();
 									break;
-									// we dont have a delete function either aaaaaa
 								case 4:
 									quit_lib_actions = 'y';
 									break;
