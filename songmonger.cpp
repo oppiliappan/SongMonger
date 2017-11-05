@@ -83,6 +83,7 @@ public:
 	// depends on an incomplete function
 	void addSong(); //Songs --> Song because one song at a time
 	void delSong(); // New and done
+	void editSong(); 
 	static int songcount;
 };
 
@@ -104,6 +105,15 @@ void Library::addSong() {
 		cout << "Add more? [Y/n] ";
 		cin >> ch;
 	} while(ch == 'y');
+}
+
+void Library::editSong() {
+	int *ch = new int; 
+	cout << "Which song to edit?";
+	dispSongs();
+	cout << "Select number: ";
+	cin >> *ch;
+	songlist[*ch].editData();
 }
 
 void Library::delSong() {
@@ -227,12 +237,7 @@ void User::addToLibrary() {
 }
 
 void User::editLibrary() {
-	int *ch = new int; 
-	cout << "Which song to edit?";
-	songs.dispSongs();
-	cout << "Select number: ";
-	cin >> *ch;
-	songlist[i].editData();
+	songs.editSong();
 }
 
 
@@ -240,7 +245,7 @@ void User::viewLibrary(){
 	songs.dispSongs();
 }
 
-void deleteSong(){
+void User::delFromLibrary() {
 	songs.delSong();
 }
 
@@ -350,7 +355,7 @@ int main(){
 									users[choose_user].editLibrary();
 									break;
 								case 3:
-									users.[choose_user].delFromLibrary();
+									users[choose_user].delFromLibrary();
 									break;
 								case 4:
 									quit_lib_actions = 'y';
