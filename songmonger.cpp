@@ -21,7 +21,7 @@ public:
 	void addData();
 	void dispData(); //Done bare minimum
 	void favit(); // Done
-	void editData(int); // INCOMPLETE
+	void editData(); //Done for now
 };
 
 // Enter song data for the first time
@@ -53,21 +53,24 @@ void Song::favit(){
 // 2 for Album
 // 3 for Artist
 // 4 for Duration
-// This function is probably useless
-void Song::editData(int x){
-	if(x == 1) {
+// This function is probably useless --> How on earth was it incomplete for so long?!
+// Illlogical to change duration of a song
+void Song::editData(){
+	int *ch = new int; 
+	cout << "Edit options: 1. Title\n2. Album Name\n3.Artist name\n";
+	cin >> *ch;
+	if(*ch == 1) {
 		cout<<"\nEnter new title: ";
-	} else if(x == 2) {
+		fgets(title, 20, stdin);
+	} else if(*ch == 2) {
 		cout<<"\nEnter new album name: ";
-	} else if(x == 3) {
+		fgets(album, 20, stdin);
+	} else if(*ch == 3) {
 		cout<<"\nEnter new artist name: ";
-	} else if(x == 4) {
-		cout<<"\nEnter new duration: ";
+		fgets(artist, 20, stdin);
 	} else {
-		cout<<"\nInvalid option. Try again";
-		cout<<"\nEnter the option";
-		cin>>x;
-		editData(x);
+		cout<<"\nInvalid option. Try again\n";
+		editData();
 	}
 }
 
@@ -184,6 +187,7 @@ public:
 	void setup(); // for the first time setup
 	void dispDetails();
 	void addToLibrary();
+	void editLibrary();
 	void viewLibrary();
 	void delFromLibrary();
 	static int usercount; // this is the static variable we deserve
@@ -221,6 +225,16 @@ void User::addToLibrary() {
 	songs.addSong();
 	cout<<"\nYou currently have "<<Library::songcount<<" songs\n";
 }
+
+void User::editLibrary() {
+	int *ch = new int; 
+	cout << "Which song to edit?";
+	songs.dispSongs();
+	cout << "Select number: ";
+	cin >> *ch;
+	songlist[i].editData();
+}
+
 
 void User::viewLibrary(){
 	songs.dispSongs();
@@ -333,7 +347,7 @@ int main(){
 									users[choose_user].addToLibrary();
 									break;
 								case 2:
-									// aaaaaa we dont have an edit function
+									users[choose_user].editLibrary();
 									break;
 								case 3:
 									users.[choose_user].delFromLibrary();
