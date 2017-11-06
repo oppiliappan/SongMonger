@@ -6,22 +6,22 @@ using namespace std;
 
 // How about making this a queue?
 class Song{
-private:
-	char title[20], artist[10], album[10];
-	int isfav, duration, views;
-public:
-	Song(){
-		strcpy(title, "UNTITLED");
-		strcpy(album, "UNTITLED");
-		strcpy(artist, "NIL");
-		duration = 0;
-		isfav = 0;
-	}
+	private:
+		char title[20], artist[10], album[10];
+		int isfav, duration, views;
+	public:
+		Song(){
+			strcpy(title, "UNTITLED");
+			strcpy(album, "UNTITLED");
+			strcpy(artist, "NIL");
+			duration = 0;
+			isfav = 0;
+		}
 
-	void addData();
-	void dispData(); //Done bare minimum
-	void favit(); // Done
-	void editData(); //Done for now
+		void addData();
+		void dispData(); //Done bare minimum
+		void favit(); // Done
+		void editData(); //Done for now
 };
 
 // Enter song data for the first time
@@ -56,7 +56,7 @@ void Song::favit(){
 // This function is probably useless --> How on earth was it incomplete for so long?!
 // Illlogical to change duration of a song
 void Song::editData(){
-	int *ch = new int; 
+	int *ch = new int;
 	cout << "Edit options: 1. Title\n2. Album Name\n3.Artist name\n";
 	cin >> *ch;
 	if(*ch == 1) {
@@ -75,16 +75,16 @@ void Song::editData(){
 }
 
 class Library{
-protected:
-	Song songlist[20];
-public:
-	void dispSongs(); // complete
+	protected:
+		Song songlist[20];
+	public:
+		void dispSongs(); // complete
 
-	// depends on an incomplete function
-	void addSong(); //Songs --> Song because one song at a time
-	void delSong(); // New and done
-	void editSong(); 
-	static int songcount;
+		// depends on an incomplete function
+		void addSong(); //Songs --> Song because one song at a time
+		void delSong(); // New and done
+		void editSong();
+		static int songcount;
 };
 
 int Library::songcount = 0;
@@ -108,7 +108,7 @@ void Library::addSong() {
 }
 
 void Library::editSong() {
-	int *ch = new int; 
+	int *ch = new int;
 	cout << "Which song to edit?";
 	dispSongs();
 	cout << "Select number: ";
@@ -130,16 +130,16 @@ void Library::delSong() {
 
 // Inheriting Class
 class Playlist: public Library {
-private:
-	char playname[20];
-public:
-	Playlist() {
-		strcpy(playname, "UNTITLED");
-	}
-	void setPlayName();
-	void dispPlayName(); // complete
-	void addSong();
-	void delSong();
+	private:
+		char playname[20];
+	public:
+		Playlist() {
+			strcpy(playname, "UNTITLED");
+		}
+		void setPlayName();
+		void dispPlayName(); // complete
+		void addSong();
+		void delSong();
 };
 
 void Playlist::setPlayName() {
@@ -181,28 +181,28 @@ void Playlist::delSong() {
 }
 
 class User {
-private:
-	char username[10];
-	Library songs;
-	Playlist plists[10];
+	private:
+		char username[10];
+		Library songs;
+		Playlist plists[10];
 
-public:
-	User() {
-		strcpy(username, "Jawn_dough");
-		isactivated = 'n';
-	}
-	void getUsername(){
-		cout<<username;
-	}
-	void setup(); // for the first time setup
-	void dispDetails();
-	void addToLibrary();
-	void editLibrary();
-	void viewLibrary();
-	void delFromLibrary();
-	static int usercount; // this is the static variable we deserve
-	int playlistcount;
-	char isactivated; // Self explanatory - high quality comment
+	public:
+		User() {
+			strcpy(username, "Jawn_dough");
+			isactivated = 'n';
+		}
+		void getUsername(){
+			cout<<username;
+		}
+		void setup(); // for the first time setup
+		void dispDetails();
+		void addToLibrary();
+		void editLibrary();
+		void viewLibrary();
+		void delFromLibrary();
+		static int usercount; // this is the static variable we deserve
+		int playlistcount;
+		char isactivated; // Self explanatory - high quality comment
 }users[5];
 
 int User::usercount = 0;
@@ -260,31 +260,31 @@ int main(){
 	1. User abc
 	2. User xyz
 	Choose option
-		Welcome User abc
-			Name: abc
-			Songs:
-				1.
-				2.
-				3.
-			Playlists:
-				1.
-				2.
-				3.
-			1. Library actions
-			2. Playlist actions
-			3. Logout
-			Enter option
-				Library actions
-					1. Add song
-					2. Edit song
-					3. Delete song
-					4. Back
+	Welcome User abc
+	Name: abc
+		Songs:
+		1.
+		2.
+		3.
+		Playlists:
+		1.
+		2.
+		3.
+		1. Library actions
+		2. Playlist actions
+		3. Logout
+		Enter option
+			Library actions
+				1. Add song
+				2. Edit song
+				3. Delete song
+				4. Back
 
-					Playlist actions
-					1. Create new playlist
-					2. Edit existing playlist
-					3. Delete playlist
-					4. Back
+			Playlist actions
+				1. Create new playlist
+				2. Edit existing playlist
+				3. Delete playlist
+				4. Back
 	*/
 
 	// enter user select
@@ -334,7 +334,6 @@ int main(){
 			do{
 				switch(user_action){
 					case 1:{
-
 						// enter lib actions
 						char quit_lib_actions = 'n';
 						do{
@@ -367,10 +366,9 @@ int main(){
 							cout<<"Go back? (y/n)\n";
 							cin>>quit_lib_actions;
 						} while (quit_lib_actions == 'n');
-						break;
+							break;
 					}
 					case 2:{
-
 						// enter play actions
 						char quit_play_actions = 'n';
 						do{
@@ -400,7 +398,7 @@ int main(){
 							cout<<"Would you like to quit? (y/n)\n";
 							cin>>quit_play_actions;
 						} while (quit_play_actions == 'n');
-						break;
+					break;
 					}
 				}
 			} while (exit_actions == 'n');
