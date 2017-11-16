@@ -195,11 +195,13 @@ class User {
 			cout<<username;
 		}
 		void setup(); // for the first time setup
-		void dispDetails();
+		void dispPlayName();
+		void dispAll();
 		void addToLibrary();
 		void editLibrary();
 		void viewLibrary();
 		void delFromLibrary();
+		void editPlaylistName();
 		static int usercount; // this is the static variable we deserve
 		int playlistcount;
 		char isactivated; // Self explanatory - high quality comment
@@ -215,13 +217,7 @@ void User::setup() {
 	cout << "Now let's get songmongering!";
 }
 
-void User::dispDetails() {
-	cout<<"\nName: "<<username;
-	cout<<"\nSongs: \n";
-	if ((Library::songcount) == 0) cout<<"No songs\n";
-	else{
-		songs.dispSongs();
-	}
+void User::dispPlayName() {
 	cout<<"\nPlaylists: \n";
 	if (User::playlistcount == 0) cout<<"No playlists\n";
 	else{
@@ -229,6 +225,15 @@ void User::dispDetails() {
 			plists[i].dispPlayName();
 		}
 	}
+}
+void User::dispAll() {
+	cout<<"\nName: "<<username;
+	cout<<"\nSongs: \n";
+	if ((Library::songcount) == 0) cout<<"No songs\n";
+	else{
+		songs.dispSongs();
+	}
+	dispPlayName();
 }
 
 void User::addToLibrary() {
@@ -240,7 +245,6 @@ void User::editLibrary() {
 	songs.editSong();
 }
 
-
 void User::viewLibrary(){
 	songs.dispSongs();
 }
@@ -249,6 +253,13 @@ void User::delFromLibrary() {
 	songs.delSong();
 }
 
+void User::editPlaylistName() {
+	int* ch = new int;
+	cout << "Which playlist?";
+	dispPlayName();
+	cin >> *ch;
+	plists[*ch].setPlayName();
+}
 
 /* -------------------------- MAIN ----------------------------- */
 int main(){
@@ -366,7 +377,7 @@ int main(){
 							cout<<"Go back? (y/n)\n";
 							cin>>quit_lib_actions;
 						} while (quit_lib_actions == 'n');
-							break;
+						break;
 					}
 					case 2:{
 						// enter play actions
