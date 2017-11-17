@@ -195,14 +195,24 @@ class User {
 			cout<<username;
 		}
 		void setup(); // for the first time setup
-		void dispPlayName();
 		void dispAll();
+
+		// Library function definitions
 		void addToLibrary();
 		void editLibrary();
 		void viewLibrary();
 		void delFromLibrary();
+		
+		// Playlist function definitions
+		void dispPlayName();
 		void editPlaylistName();
+		void delPlaylist();
 		static int usercount; // this is the static variable we deserve
+		
+		// File handling
+		void storeUserdata();
+		void readUserdata();
+
 		int playlistcount;
 		char isactivated; // Self explanatory - high quality comment
 }users[5];
@@ -217,15 +227,6 @@ void User::setup() {
 	cout << "Now let's get songmongering!";
 }
 
-void User::dispPlayName() {
-	cout<<"\nPlaylists: \n";
-	if (User::playlistcount == 0) cout<<"No playlists\n";
-	else{
-		for(int i=0; i<playlistcount; i++){
-			plists[i].dispPlayName();
-		}
-	}
-}
 void User::dispAll() {
 	cout<<"\nName: "<<username;
 	cout<<"\nSongs: \n";
@@ -253,12 +254,45 @@ void User::delFromLibrary() {
 	songs.delSong();
 }
 
+void User::dispPlayName() {
+	cout<<"\nPlaylists: \n";
+	if (User::playlistcount == 0) cout<<"No playlists\n";
+	else{
+		for(int i=0; i<playlistcount; i++){
+			plists[i].dispPlayName();
+		}
+	}
+}
+
 void User::editPlaylistName() {
 	int* ch = new int;
 	cout << "Which playlist?";
 	dispPlayName();
 	cin >> *ch;
 	plists[*ch].setPlayName();
+}
+
+void User::delPlaylist() {
+	int* ch = new int;
+	cout << "Which playlist?";
+	dispPlayName();
+	cin >> *ch;
+	for (int i = *ch; i < playlistcount; i++) {
+		if(i < sizeof(Playlist)/2) plists[i] = plists[i + 1]; // if statement prevents segmentation faults
+	}
+	playlistcount--;
+}
+
+void User::storeUserdata() {
+	ofstream file;
+	file.open("userdata.dat", ios::out | ios::binary | ios::app);
+	file.write((char*)this, sizeof(User));
+}
+
+void User::readUserdata() {
+	ifstream file;
+	file.open("userdata.dat", ios::in | ios::binary);
+	file.read((char*)this, sizeof(User));
 }
 
 /* -------------------------- MAIN ----------------------------- */
@@ -331,7 +365,7 @@ int main(){
 		// enter user actions
 		char logout = 'n';
 		do{
-			users[choose_user].dispDetails();
+			users[choose_user].dispAll();
 			cout<<"1. Library actions\n";
 			cout<<"2. Playlist actions\n";
 			cout<<"3. Back to user select\n";
@@ -395,11 +429,11 @@ int main(){
 									users[choose_user].addToLibrary();
 									break;
 								case 2:
-									// aaaaaa we dont have an edit function
+									users[choose_user].editPlaylistName();
 									break;
 								case 3:
+									users[choose_user].delPlaylist();
 									break;
-									// we dont have a delete function either aaaaaa
 								case 4:
 									quit_play_actions = 'y';
 									break;
