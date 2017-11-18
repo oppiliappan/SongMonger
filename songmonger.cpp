@@ -27,11 +27,14 @@ class Song{
 // Enter song data for the first time
 void Song::addData(){
 	cout<<"\nEnter title:";
-	fgets(title, 20, stdin);
+	//fgets(title, 20, stdin);
+	cin>>title;
 	cout<<"\nEnter artist: ";
-	fgets(artist, 20, stdin);
+	//fgets(artist, 20, stdin);
+	cin>>artist;
 	cout<<"\nEnter album: ";
-	fgets(album, 20, stdin);
+	//fgets(album, 20, stdin);
+	cin>>album;
 	cout<<"\nEnter duration (sec.): ";
 	cin>>duration;
 }
@@ -102,7 +105,7 @@ void Library::addSong() {
 	do {
 		songlist[songcount].addData();
 		songcount++;
-		cout << "Add more? [Y/n] ";
+		cout << "Add more? [y/n] ";
 		cin >> ch;
 	} while(ch == 'y');
 }
@@ -202,13 +205,13 @@ class User {
 		void editLibrary();
 		void viewLibrary();
 		void delFromLibrary();
-		
+
 		// Playlist function definitions
 		void dispPlayName();
 		void editPlaylistName();
 		void delPlaylist();
 		static int usercount; // this is the static variable we deserve
-		
+
 		// File handling
 		void storeUserdata();
 		void readUserdata();
@@ -273,7 +276,7 @@ void User::editPlaylistName() {
 }
 
 void User::delPlaylist() {
-	int* ch = new int;
+	int *ch = new int;
 	cout << "Which playlist?";
 	dispPlayName();
 	cin >> *ch;
@@ -306,7 +309,7 @@ int main(){
 	2. User xyz
 	Choose option
 	Welcome User abc
-	Name: abc
+		Name: abc
 		Songs:
 		1.
 		2.
@@ -319,17 +322,17 @@ int main(){
 		2. Playlist actions
 		3. Logout
 		Enter option
-			Library actions
-				1. Add song
-				2. Edit song
-				3. Delete song
-				4. Back
+		Library actions
+		1. Add song
+		2. Edit song
+		3. Delete song
+		4. Back
 
-			Playlist actions
-				1. Create new playlist
-				2. Edit existing playlist
-				3. Delete playlist
-				4. Back
+		Playlist actions
+		1. Create new playlist
+		2. Edit existing playlist
+		3. Delete playlist
+		4. Back
 	*/
 
 	// enter user select
@@ -379,71 +382,70 @@ int main(){
 			do{
 				switch(user_action){
 					case 1:{
-						// enter lib actions
-						char quit_lib_actions = 'n';
-						do{
-							cout<<"\nLibrary actions\n";
-							cout<<"1. Add songs\n";
-							cout<<"2. Edit songs\n";
-							cout<<"3. Delete songs\n";
-							cout<<"4. Back\n";
+							// enter lib actions
+							char quit_lib_actions = 'n';
+							do{
+								cout<<"\nLibrary actions\n";
+								cout<<"1. Add songs\n";
+								cout<<"2. Edit songs\n";
+								cout<<"3. Delete songs\n";
+								cout<<"4. Back\n";
 
-							int lib_action;
-							cin>>lib_action;
+								int lib_action;
+								cin>>lib_action;
 
-							switch(lib_action){
-								case 1:
-									users[choose_user].addToLibrary();
-									break;
-								case 2:
-									users[choose_user].editLibrary();
-									break;
-								case 3:
-									users[choose_user].delFromLibrary();
-									break;
-								case 4:
-									quit_lib_actions = 'y';
-									break;
-								default:
-									cout<<"Invalid option\n";
-									break;
-							}
-							cout<<"Go back? (y/n)\n";
-							cin>>quit_lib_actions;
-						} while (quit_lib_actions == 'n');
+								switch(lib_action){
+										case 1:
+											users[choose_user].addToLibrary();
+											break;
+										case 2:
+											users[choose_user].editLibrary();
+											break;
+										case 3:
+											users[choose_user].delFromLibrary();
+											break;
+										case 4:
+											quit_lib_actions = 'y';
+											break;
+										default:
+											cout<<"Invalid option\n";
+											break;
+								}
+							} while (quit_lib_actions == 'n');
 						break;
 					}
 					case 2:{
-						// enter play actions
-						char quit_play_actions = 'n';
-						do{
-							cout<<"\nPlaylist actions\n";
-							cout<<"1. Create playlist\n";
-							cout<<"2. Edit existing playlist\n";
-							cout<<"3. Delete playlist\n";
-							int play_action;
-							cin>>play_action;
+							// enter play actions
+							char quit_play_actions = 'n';
+							do{
+								cout<<"\nPlaylist actions\n";
+								cout<<"1. Create playlist\n";
+								cout<<"2. Edit existing playlist\n";
+								cout<<"3. Delete playlist\n";
+								int play_action;
+								cin>>play_action;
 
-							switch(play_action){
-								case 1:
-									users[choose_user].addToLibrary();
-									break;
-								case 2:
-									users[choose_user].editPlaylistName();
-									break;
-								case 3:
-									users[choose_user].delPlaylist();
-									break;
-								case 4:
-									quit_play_actions = 'y';
-									break;
-								default:
-									cout<<"Invalid option\n";
-							}
-							cout<<"Would you like to quit? (y/n)\n";
-							cin>>quit_play_actions;
-						} while (quit_play_actions == 'n');
-					break;
+								switch(play_action){
+									case 1:
+										users[choose_user].addToLibrary();
+										break;
+									case 2:
+										users[choose_user].editPlaylistName();
+										break;
+									case 3:
+										users[choose_user].delPlaylist();
+										break;
+									case 4:
+										quit_play_actions = 'y';
+										break;
+									default:
+										cout<<"Invalid option\n";
+								}
+
+								cout<<"Would you like to quit? (y/n)\n";
+								cin>>quit_play_actions;
+							} while (quit_play_actions == 'n');
+						break;
 					}
 				}
 			} while (exit_actions == 'n');
