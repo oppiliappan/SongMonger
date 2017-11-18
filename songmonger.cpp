@@ -268,7 +268,7 @@ void User::dispPlayName() {
 }
 
 void User::editPlaylistName() {
-	int* ch = new int;
+	int *ch = new int;
 	cout << "Which playlist?";
 	dispPlayName();
 	cin >> *ch;
@@ -448,8 +448,8 @@ int main(){
 						break;
 					}
 				}
-			} while (exit_actions == 'n');
-		} while (logout == 'n');
-	} while (quit_program == 'n');
+			} while (exit_actions == 'n'); //back to 2 choice menu
+		} while (logout == 'n'); //back to user select
+	} while (quit_program == 'n'); //back to your PC
 	return 0;
 }
