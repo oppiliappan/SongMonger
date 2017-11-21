@@ -11,7 +11,7 @@ class Song{
 		char title[20], artist[10], album[10];
 		int isfav, duration, views;
 	public:
-		Song(){
+		Song() {
 			strcpy(title, "UNTITLED");
 			strcpy(album, "UNTITLED");
 			strcpy(artist, "NIL");
@@ -40,7 +40,7 @@ void Song::addData(){
 	cin>>duration;
 }
 // Display formatted song data
-void Song::dispData(){
+void Song::dispData() {
 	cout<<title<<"\t"<<artist<<"\t"<<album<<"\t"<<duration;
 	if(isfav == 1)cout<<"\t*\n";
 	else cout<<"\n";
@@ -89,14 +89,12 @@ class Library{
 		void addSong(); //Songs --> Song because one song at a time
 		void delSong(); // New and done
 		void editSong();
-		static int songcount;
+		int songcount;
 };
-
-int Library::songcount = 0;
 
 void Library::dispSongs() {
 	cout << "\n";
-	for(int i=0; i<Library::songcount; i++){
+	for(int i=0; i<songcount; i++){
 		cout << i + 1 << ". ";
 		songlist[i].dispData();
 	}
@@ -216,8 +214,12 @@ class User {
 		static int usercount; // this is the static variable we deserve
 
 		// File handling
+		void storeUsercount();
+		void readUserCount();
 		void storeUserdata();
 		void readUserdata();
+		void storeAll(User *userobj);
+		void readAll(User *userobj);
 
 		int playlistcount;
 		char isactivated; // Self explanatory - high quality comment
@@ -236,7 +238,7 @@ void User::setup() {
 void User::dispAll() {
 	cout<<"\nName: "<<username;
 	cout<<"\nSongs: ";
-	if ((Library::songcount) == 0) cout<<"\nNo songs";
+	if ((songs.songcount) == 0) cout<<"\nNo songs";
 	else{
 		songs.dispSongs();
 	}
@@ -245,7 +247,7 @@ void User::dispAll() {
 
 void User::addToLibrary() {
 	songs.addSong();
-	cout<<"\nYou currently have "<<Library::songcount<<" songs\n";
+	cout<<"\nYou currently have "<<songs.songcount<<" songs\n";
 }
 
 void User::editLibrary() {
@@ -289,6 +291,19 @@ void User::delPlaylist() {
 	playlistcount--;
 }
 
+void User::storeUsercount() {
+	remove("usercount.dat");
+	ofstream countfile;
+	countfile.open("usercount.txt");
+	countfile << User::usercount;
+}
+
+void User::readUserCount() {
+	ifstream countfile;
+	countfile.open("usercount.txt");
+	countfile >> User::usercount;
+}
+
 void User::storeUserdata() {
 	ofstream file;
 	file.open("userdata.dat", ios::out | ios::binary | ios::app);
@@ -302,16 +317,18 @@ void User::readUserdata() {
 }
 
 // This stores data for ALL USERS
-void storeAll(User *userobj, int no_of_users) {
+void User::storeAll(User *userobj) {
 	remove("userdata.dat");
-	for (int i = 0; i < no_of_users; i++) {
+	for (int i = 0; i < User::usercount; i++) {
 		userobj[i].storeUserdata();
 	}
+	storeUsercount();
 }
 
 // Loads all data into User objects
-void readAll(User *userobj, int no_of_users) {
-	for (int i = 0; i < no_of_users; i++) {
+void User::readAll(User *userobj) {
+	readUserCount();
+	for (int i = 0; i < User::usercount; i++) {
 		userobj[i].readUserdata();
 	}
 }
@@ -321,43 +338,43 @@ int main(){
 	cout<<"\t\t\tWelcome to SongMonger!\n";
 
 	/*
-	TODO
-	You forgot this ----> 1. New User 2. Existing user
-	1. User abc
-	2. User xyz
-	Choose option
-	Welcome User abc
-		Name: abc
-		Songs:
-		1.
-		2.
-		3.
-		Playlists:
-		1.
-		2.
-		3.
-		1. Library actions
-		2. Playlist actions
-		3. Logout
-		Enter option
-		Library actions
-		1. Add song
-		2. Edit song
-		3. Delete song
-		4. Back
+	   TODO
+	   You forgot this ----> 1. New User 2. Existing user
+	   1. User abc
+	   2. User xyz
+	   Choose option
+	   Welcome User abc
+Name: abc
+Songs:
+1.
+2.
+3.
+Playlists:
+1.
+2.
+3.
+1. Library actions
+2. Playlist actions
+3. Logout
+Enter option
+Library actions
+1. Add song
+2. Edit song
+3. Delete song
+4. Back
 
-		Playlist actions
-		1. Create new playlist
-		2. Edit existing playlist
-		3. Delete playlist
-		4. Back
-	*/
+Playlist actions
+1. Create new playlist
+2. Edit existing playlist
+3. Delete playlist
+4. Back
+	 */
 
 	// enter user select
 	char quit_program = 'n';
 	do{
 		char ch;
-		system("cls");
+		system("clear");
 		cout << "1. New User\n2. Existing User\n3. Quit Program\n";
 		cin >> ch;
 		if (ch == '1') {
@@ -373,12 +390,13 @@ int main(){
 			users[i].setup();
 		}
 		else if(ch == '3'){
-            exit(0);
+			exit(0);
 		}
 
 
-		readAll(users, users[0].usercount); // loads all users
-		for(int i = 0; i < users[0].usercount; i++){
+		users[0].readAll(users); // loads all users
+		cout << "Currently Active Users: " << User::usercount;
+		for(int i = 0; i < User::usercount; i++) {
 			// this will make sure only existing users show up
 			cout << "\n" << i + 1 << ". ";
 			users[i].getUsername();
@@ -393,7 +411,7 @@ int main(){
 		// enter user actions
 		char back_to_userselect = 'n';
 		do{
-            system("cls");
+			system("clear");
 			users[choose_user].dispAll();
 
 			// these are 'user actions'
@@ -402,91 +420,90 @@ int main(){
 			cout<<"2. Playlist actions\n";
 			cout<<"3. User Details\n";
 			cout<<"4. Back to user select\n";
-			cout<<"\nWhat would you like to do?\n";
+			cout<<"\n What would you like to do?\n";
 
 			int user_action;
 			cin>>user_action;
 
 			switch(user_action){
-                case 1:{
-                    char quit_lib_actions = 'n';
-                    // enter lib actions
-                    do{
-                        system("cls");
-                        users[choose_user].viewLibrary();
-                        cout<<"\n-------Library actions-------\n";
-                        cout<<"1. Add songs\n";
-                        cout<<"2. Edit songs\n";
-                        cout<<"3. Delete songs\n";
+				case 1:{
+					char quit_lib_actions = 'n';
+					// enter lib actions
+					do{
+						system("clear");
+						users[choose_user].viewLibrary();
+						cout<<"\n-------Library actions-------\n";
+						cout<<"1. Add songs\n";
+						cout<<"2. Edit songs\n";
+						cout<<"3. Delete songs\n";
 
-                        int lib_action;
-                        cin>>lib_action;
+								int lib_action;
+								cin>>lib_action;
 
-                        switch(lib_action){
-                            case 1:
-                                users[choose_user].addToLibrary();
-                                break;
-                            case 2:
-                                users[choose_user].editLibrary();
-                                break;
-                            case 3:
-                                users[choose_user].delFromLibrary();
-                                break;
-                            default:
-                                cout<<"Invalid option\n";
-                        }
+								switch(lib_action){
+									case 1:
+									   users[choose_user].addToLibrary();
+									   break;
+								   case 2:
+									   users[choose_user].editLibrary();
+									   break;
+								   case 3:
+									   users[choose_user].delFromLibrary();
+									   break;
+								   default:
+									   cout<<"Invalid option\n";
+							   }
 
-                        cout<<"Would you like to quit library actions? (y/n)\n";
-                        cin>>quit_lib_actions;
-                    } while (quit_lib_actions == 'n');
-                    break;
-                }
-                case 2:{
-                    char quit_play_actions = 'n';
+							   cout<<"Would you like to quit library actions? (y/n)\n";
+							   cin>>quit_lib_actions;
+						   } while (quit_lib_actions == 'n');
+						   break;
+					   }
+				case 2:{
+						   char quit_play_actions = 'n';
 
-                    // enter play actions
-                    do{
-                        system("cls");
-                        cout<<"-------\nPlaylist actions-------\n";
-                        cout<<"1. Create playlist\n";
-                        cout<<"2. Edit existing playlist\n";
-                        cout<<"3. Delete playlist\n";
+						   // enter play actions
+						   do{
+							   system("clear");
+							   cout<<"-------\nPlaylist actions-------\n";
+							   cout<<"1. Create playlist\n";
+							   cout<<"2. Edit existing playlist\n";
+							   cout<<"3. Delete playlist\n";
 
-                        int play_action;
-                        cin>>play_action;
+							   int play_action;
+							   cin>>play_action;
 
-                        switch(play_action){
-                            case 1:
-                                users[choose_user].addToLibrary();
-                                break;
-                            case 2:
-                                users[choose_user].editPlaylistName();
-                                break;
-                            case 3:
-                                users[choose_user].delPlaylist();
-                                break;
-                            default:
-                                cout<<"Invalid option\n";
-                        }
+							   switch(play_action){
+								   case 1:
+									   users[choose_user].addToLibrary();
+									   break;
+								   case 2:
+									   users[choose_user].editPlaylistName();
+									   break;
+								   case 3:
+									   users[choose_user].delPlaylist();
+									   break;
+								   default:
+									   cout<<"Invalid option\n";
+							   }
 
-                        cout<<"Would you like to quit playlist actions? (y/n)\n";
-                        cin>>quit_play_actions;
-                    } while (quit_play_actions == 'n');
-                    break;
-                }
-                case 3:{
-                    system("cls");
-                    users[choose_user].dispAll();
-                    break;
-                }
-                case 4:{
-                    back_to_userselect = 'y';
-                    break;
-                }
+							   cout<<"Would you like to quit playlist actions? (y/n)\n";
+							   cin>>quit_play_actions;
+						   } while (quit_play_actions == 'n');
+						   break;
+					   }
+				case 3:{
+						   system("clear");
+						   users[choose_user].dispAll();
+						   break;
+					   }
+				case 4:{
+						   back_to_userselect = 'y';
+						   break;
+					   }
 			}
 		}while(back_to_userselect == 'n');
 
 	} while (quit_program == 'n'); //back to your PC
 	return 0;
 }
-
