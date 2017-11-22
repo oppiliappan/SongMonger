@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <cstdlib>
+#include <iomanip>
+
 using namespace std;
 
 // How about making this a queue?
@@ -44,7 +46,10 @@ void Song::addData(){
 }
 // Display formatted song data
 void Song::dispData() {
-	cout<<title<<"\t"<<artist<<"\t"<<album<<"\t"<<duration;
+	cout<<setw(10)<<title;
+	cout<<setw(10)<<artist;
+	cout<<setw(10)<<album;
+	cout<<setw(10)<<duration;
 	if(isfav == 1)cout<<"\t*\n";
 	else cout<<"\n";
 }
@@ -256,7 +261,7 @@ void User::setup() {
 
 void User::dispAll() {
 	cout<<"\nName: "<<username;
-	cout<<"\nSongs: ";
+	cout<<"\n----------------------SONGS-----------------------";
 	if ((songs.songcount) == 0) cout<<"\nNo songs";
 	else{
 		songs.dispSongs();
@@ -304,8 +309,10 @@ void User::createPlaylist(){
 
 	char continue_adding = 'y';
 	do{
-		cout<<"Creating playlist ";
+		system("clear");
+		cout<<"----------------";
 		plists[playlistcount].dispPlayName();
+		cout<<"----------------";
 		cout<<"\n";
 
 		songs.dispSongs();
@@ -323,16 +330,19 @@ void User::createPlaylist(){
 	}while(continue_adding == 'y');
 
 	system("clear");
+	plists[playlistcount].dispPlayName();
+	cout<<"\n";
 	plists[playlistcount].dispSongs();
 	playlistcount++;
 }
 
 void User::dispPlayName() {
-	cout<<"\nPlaylists: \n";
+	cout<<"\n----------------------PLAYLISTS--------------------- \n";
 	if (User::playlistcount == 0) cout<<"No playlists\n";
 	else{
 		for(int i=0; i<playlistcount; i++){
 			plists[i].dispPlayName();
+			cout<<"\n";
 		}
 	}
 }
@@ -468,6 +478,7 @@ Playlist actions
 				i++;
 			}
 			users[i].setup();
+			users[i].storeAll(users);
 		}
 		else if(ch == '3'){
 			exit(0);
@@ -554,7 +565,7 @@ Playlist actions
 					// enter play actions
 					do{
 						system("clear");
-						cout<<"-------\nPlaylist actions-------\n";
+						cout<<"-------Playlist actions-------\n";
 						cout<<"1. Create playlist\n";
 						cout<<"2. Edit existing playlist\n";
 						cout<<"3. Delete playlist\n";
