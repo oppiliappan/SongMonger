@@ -217,7 +217,7 @@ class User {
 		void storeUsercount();
 		void readUserCount();
 		void storeUserdata();
-		void readUserdata();
+		void readUserdata(int index);
 		void storeAll(User *userobj);
 		void readAll(User *userobj);
 
@@ -311,10 +311,10 @@ void User::storeUserdata() {
 	file.close();
 }
 
-void User::readUserdata() {
+void User::readUserdata(int index) {
 	ifstream file;
 	file.open("userdata.dat", ios::in | ios::binary);
-	file.seekg(User::usercount * (sizeof(User)), ios::beg);
+	file.seekg(index * (sizeof(User)), ios::beg);
 	file.read((char*)this, sizeof(User));
 	file.close();
 }
@@ -332,7 +332,7 @@ void User::storeAll(User *userobj) {
 void User::readAll(User *userobj) {
 	readUserCount();
 	for (int i = 0; i < User::usercount; i++) {
-		userobj[i].readUserdata();
+		userobj[i].readUserdata(i);
 	}
 }
 
@@ -391,12 +391,11 @@ Playlist actions
 				i++;
 			}
 			users[i].setup();
+			users[0].storeAll(users);
 		}
 		else if(ch == '3'){
 			exit(0);
 		}
-
-		users[0].storeAll(users);
 
 		users[0].readAll(users); // loads all users
 		cout << "Currently Active Users: " << User::usercount;
