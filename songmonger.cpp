@@ -147,7 +147,7 @@ void Library::delSong() {
 }
 
 void Library::favinLibrary(int song_ind) {
-	song_ind++;
+	song_ind--;
 	songlist[song_ind].favit();
 }
 // Inheriting Class
@@ -446,12 +446,13 @@ Playlist actions
 
 		// enter user actions
 		char back_to_userselect = 'n';
+		int fav_only_toggle = 0;
 		do{
 			system("clear");
-			int fav_only_toggle = 0;
 			if (fav_only_toggle == 0) {
 				users[choose_user].dispAll();
 			} else {
+				cout << "(Showing only favourites)";
 				users[choose_user].dispFav();
 			}
 
@@ -459,7 +460,7 @@ Playlist actions
 			cout<<"\n-------MAIN MENU-------\n";
 			cout<<"1. Library actions\n";
 			cout<<"2. Playlist actions\n";
-			cout<<"3. Add to favourites\n";
+			cout<<"3. Add to favourites OR Remove from favourites\n";
 			cout<<"4. Toggle Show Only Favourites\n";
 			cout<<"5. Back to user select\n";
 			cout<<"\n What would you like to do?\n";
