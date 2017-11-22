@@ -292,7 +292,7 @@ void User::delPlaylist() {
 }
 
 void User::storeUsercount() {
-	remove("usercount.dat");
+	remove("usercount.txt");
 	ofstream countfile;
 	countfile.open("usercount.txt");
 	countfile << User::usercount;
@@ -308,12 +308,14 @@ void User::storeUserdata() {
 	ofstream file;
 	file.open("userdata.dat", ios::out | ios::binary | ios::app);
 	file.write((char*)this, sizeof(User));
+	file.close();
 }
 
 void User::readUserdata() {
 	ifstream file;
-	file.open("userdata.dat", ios::in | ios::binary | ios::app);
+	file.open("userdata.dat", ios::in | ios::binary);
 	file.read((char*)this, sizeof(User));
+	file.close();
 }
 
 // This stores data for ALL USERS
@@ -393,6 +395,7 @@ Playlist actions
 			exit(0);
 		}
 
+		users[0].storeAll(users);
 
 		users[0].readAll(users); // loads all users
 		cout << "Currently Active Users: " << User::usercount;
