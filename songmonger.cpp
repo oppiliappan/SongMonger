@@ -157,8 +157,7 @@ void Playlist::setPlayName() {
 }
 
 void Playlist::dispPlayName() {
-	puts(playname);
-	cout << "\t\t" << songcount << "song(s)";
+	cout<<playname<<" ("<<songcount<<" songs)";
 }
 
 // Is this function overloading attempt correct?
@@ -266,7 +265,6 @@ Song User::getSong(int x){
 }
 
 void User::createPlaylist(){
-	cout<<"Name of Playlist:";
 	plists[playlistcount].setPlayName();
 	system("clear");
 
@@ -283,7 +281,7 @@ void User::createPlaylist(){
 		plists[playlistcount].dispPlayName();
 		cout<<"\n";
 		cin>>ch;
-		plists[playlistcount].addSong(getSong(ch));
+		plists[playlistcount].addSong(getSong(ch-1));
 		plists[playlistcount].songcount++;
 
 		cout<<"Add more songs?\n";
