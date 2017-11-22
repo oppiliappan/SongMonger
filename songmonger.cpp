@@ -90,6 +90,7 @@ class Library{
 		void delSong(); // New and done
 		void editSong();
 		int songcount;
+		Song getSong(int);
 };
 
 void Library::dispSongs() {
@@ -132,6 +133,10 @@ void Library::delSong() {
 	songcount--;
 }
 
+Song Library::getSong(int x){
+	return songlist[x];
+}
+
 // Inheriting Class
 class Playlist: public Library {
 	private:
@@ -142,13 +147,13 @@ class Playlist: public Library {
 		}
 		void setPlayName();
 		void dispPlayName(); // complete
-		void addSong();
+		void addSong(Song);
 		void delSong();
 };
 
 void Playlist::setPlayName() {
 	cout << "Enter playlist name: ";
-	fgets(playname, 20, stdin);
+	cin>>playname;
 }
 
 void Playlist::dispPlayName() {
@@ -158,17 +163,8 @@ void Playlist::dispPlayName() {
 
 // Is this function overloading attempt correct?
 // It (ideally) overloads the definition from the Library class
-void Playlist::addSong() {
-	int ch;
-	do {
-		cout << "Add what? ";
-		dispSongs();
-		cin >> ch;
-		Library::songlist[songcount+1] = Playlist::songlist[ch]; // n + 1 is vacant, add song there
-		Playlist::songcount++;
-		cout << "Add more? [1. Yes! 2. No] ";
-		cin >> ch;
-	} while(ch == 1);
+void Playlist::addSong(Song newsong) {
+	songlist[songcount] = newsong;
 }
 
 // Is this function overloading attempt also correct?
@@ -194,6 +190,7 @@ class User {
 		User() {
 			strcpy(username, "Jawn_dough");
 			isactivated = 'n';
+			playlistcount = 0;
 		}
 		void getUsername(){
 			cout<<username; // dont add spaces here, add them where you need them
@@ -206,10 +203,12 @@ class User {
 		void editLibrary();
 		void viewLibrary();
 		void delFromLibrary();
+		Song getSong(int x);
 
 		// Playlist function definitions
+		void createPlaylist();
 		void dispPlayName();
-		void editPlaylistName();
+		void editPlaylist();
 		void delPlaylist();
 		static int usercount; // this is the static variable we deserve
 
@@ -262,6 +261,40 @@ void User::delFromLibrary() {
 	songs.delSong();
 }
 
+Song User::getSong(int x){
+	return songs.getSong(x);
+}
+
+void User::createPlaylist(){
+	cout<<"Name of Playlist:";
+	plists[playlistcount].setPlayName();
+	system("clear");
+
+	char continue_adding = 'y';
+	do{
+		cout<<"Creating playlist ";
+		plists[playlistcount].dispPlayName();
+		cout<<"\n";
+
+		songs.dispSongs();
+
+		int ch;
+		cout<<"\nEnter song to be added to ";
+		plists[playlistcount].dispPlayName();
+		cout<<"\n";
+		cin>>ch;
+		plists[playlistcount].addSong(getSong(ch));
+		plists[playlistcount].songcount++;
+
+		cout<<"Add more songs?\n";
+		cin>>continue_adding;
+	}while(continue_adding == 'y');
+
+	system("clear");
+	plists[playlistcount].dispSongs();
+	playlistcount++;
+}
+
 void User::dispPlayName() {
 	cout<<"\nPlaylists: \n";
 	if (User::playlistcount == 0) cout<<"No playlists\n";
@@ -272,12 +305,24 @@ void User::dispPlayName() {
 	}
 }
 
-void User::editPlaylistName() {
-	int *ch = new int;
-	cout << "Which playlist?";
-	dispPlayName();
-	cin >> *ch;
-	plists[*ch].setPlayName();
+void User::editPlaylist() {
+//	int ch;
+//	cout << "Which playlist?";
+//	dispPlayName();
+//	cin>>ch;
+//
+//	int edit_choice;
+//	plists[ch].dispPlayName();
+//	cout<<"\n1. Add songs\n";
+//	cout<<"\n2. Remove songs\n";
+//	cout<<"\n3. Change playlist name\n";
+//	cin>>edit_choice;
+//
+//	switch(edit_choice){
+//		case 1:
+//			plists[ch].addSong();
+//	}
+//	plists[ch].dispSongs();
 }
 
 void User::delPlaylist() {
@@ -479,10 +524,10 @@ Playlist actions
 
 						switch(play_action){
 								case 1:
-									users[choose_user].addToLibrary();
+									users[choose_user].createPlaylist();
 									break;
 								case 2:
-									users[choose_user].editPlaylistName();
+									users[choose_user].editPlaylist();
 									break;
 								case 3:
 									users[choose_user].delPlaylist();
