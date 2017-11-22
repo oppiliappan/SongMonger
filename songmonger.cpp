@@ -440,28 +440,30 @@ Playlist actions
 						cout<<"2. Edit songs\n";
 						cout<<"3. Delete songs\n";
 
-								int lib_action;
-								cin>>lib_action;
+							int lib_action;
+							cin>>lib_action;
 
-								switch(lib_action){
-									case 1:
-										users[choose_user].addToLibrary();
-										break;
-									case 2:
+							switch(lib_action){
+								case 1:
+									users[choose_user].addToLibrary();
+									break;
+								case 2:
 										users[choose_user].editLibrary();
-										break;
-									case 3:
-										users[choose_user].delFromLibrary();
-										break;
-									default:
-										cout<<"Invalid option\n";
-								}
+									break;
+								case 3:
+									users[choose_user].delFromLibrary();
+									break;
+								default:
+									cout<<"Invalid option\n";
+							}
 
-								cout<<"Would you like to quit library actions? (y/n)\n";
-								cin>>quit_lib_actions;
-							} while (quit_lib_actions == 'n');
-							break;
-						}
+							cout<<"Would you like to quit library actions? (y/n)\n";
+							cin>>quit_lib_actions;
+						} while (quit_lib_actions == 'n');
+						users[0].storeAll(users);
+						break;
+				}
+
 				case 2:{
 						char quit_play_actions = 'n';
 
