@@ -95,6 +95,7 @@ class Library{
 		void editSong();
 		void favinLibrary(int song_ind);
 		int songcount;
+		Song getSong(int);
 };
 
 void Library::dispSongs() {
@@ -150,6 +151,11 @@ void Library::favinLibrary(int song_ind) {
 	song_ind--;
 	songlist[song_ind].favit();
 }
+
+Song Library::getSong(int x){
+	return songlist[x];
+}
+
 // Inheriting Class
 class Playlist: public Library {
 	private:
@@ -160,33 +166,23 @@ class Playlist: public Library {
 		}
 		void setPlayName();
 		void dispPlayName(); // complete
-		void addSong();
+		void addSong(Song);
 		void delSong();
 };
 
 void Playlist::setPlayName() {
 	cout << "Enter playlist name: ";
-	fgets(playname, 20, stdin);
+	cin>>playname;
 }
 
 void Playlist::dispPlayName() {
-	puts(playname);
-	cout << "\t\t" << songcount << "song(s)";
+	cout<<playname<<" ("<<songcount<<" songs)";
 }
 
 // Is this function overloading attempt correct?
 // It (ideally) overloads the definition from the Library class
-void Playlist::addSong() {
-	int ch;
-	do {
-		cout << "Add what? ";
-		dispSongs();
-		cin >> ch;
-		Library::songlist[songcount+1] = Playlist::songlist[ch]; // n + 1 is vacant, add song there
-		Playlist::songcount++;
-		cout << "Add more? [1. Yes! 2. No] ";
-		cin >> ch;
-	} while(ch == 1);
+void Playlist::addSong(Song newsong) {
+	songlist[songcount] = newsong;
 }
 
 // Is this function overloading attempt also correct?
@@ -212,6 +208,7 @@ class User {
 		User() {
 			strcpy(username, "Jawn_dough");
 			isactivated = 'n';
+			playlistcount = 0;
 		}
 		void getUsername(){
 			cout<<username; // dont add spaces here, add them where you need them
@@ -225,11 +222,13 @@ class User {
 		void editLibrary();
 		void viewLibrary();
 		void delFromLibrary();
+		Song getSong(int x);
 		void favSong(int song_index);
 
 		// Playlist function definitions
+		void createPlaylist();
 		void dispPlayName();
-		void editPlaylistName();
+		void editPlaylist();
 		void delPlaylist();
 		static int usercount; // this is the static variable we deserve
 
@@ -237,7 +236,7 @@ class User {
 		void storeUsercount();
 		void readUserCount();
 		void storeUserdata();
-		void readUserdata(int index);
+		void readUserdata(int);
 		void storeAll(User *userobj);
 		void readAll(User *userobj);
 
@@ -295,6 +294,39 @@ void User::favSong(int song_index) {
 	songs.favinLibrary(song_index);
 }
 
+Song User::getSong(int x){
+	return songs.getSong(x);
+}
+
+void User::createPlaylist(){
+	plists[playlistcount].setPlayName();
+	system("clear");
+
+	char continue_adding = 'y';
+	do{
+		cout<<"Creating playlist ";
+		plists[playlistcount].dispPlayName();
+		cout<<"\n";
+
+		songs.dispSongs();
+
+		int ch;
+		cout<<"\nEnter song to be added to ";
+		plists[playlistcount].dispPlayName();
+		cout<<"\n";
+		cin>>ch;
+		plists[playlistcount].addSong(getSong(ch-1));
+		plists[playlistcount].songcount++;
+
+		cout<<"Add more songs?\n";
+		cin>>continue_adding;
+	}while(continue_adding == 'y');
+
+	system("clear");
+	plists[playlistcount].dispSongs();
+	playlistcount++;
+}
+
 void User::dispPlayName() {
 	cout<<"\nPlaylists: \n";
 	if (User::playlistcount == 0) cout<<"No playlists\n";
@@ -305,12 +337,24 @@ void User::dispPlayName() {
 	}
 }
 
-void User::editPlaylistName() {
-	int *ch = new int;
-	cout << "Which playlist?";
-	dispPlayName();
-	cin >> *ch;
-	plists[*ch].setPlayName();
+void User::editPlaylist() {
+//	int ch;
+//	cout << "Which playlist?";
+//	dispPlayName();
+//	cin>>ch;
+//
+//	int edit_choice;
+//	plists[ch].dispPlayName();
+//	cout<<"\n1. Add songs\n";
+//	cout<<"\n2. Remove songs\n";
+//	cout<<"\n3. Change playlist name\n";
+//	cin>>edit_choice;
+//
+//	switch(edit_choice){
+//		case 1:
+//			plists[ch].addSong();
+//	}
+//	plists[ch].dispSongs();
 }
 
 void User::delPlaylist() {
@@ -424,11 +468,11 @@ Playlist actions
 				i++;
 			}
 			users[i].setup();
-			users[0].storeAll(users);
 		}
 		else if(ch == '3'){
 			exit(0);
 		}
+
 
 		users[0].readAll(users); // loads all users
 		cout << "Currently Active Users: " << User::usercount;
@@ -520,10 +564,10 @@ Playlist actions
 
 						switch(play_action){
 								case 1:
-									users[choose_user].addToLibrary();
+									users[choose_user].createPlaylist();
 									break;
 								case 2:
-									users[choose_user].editPlaylistName();
+									users[choose_user].editPlaylist();
 									break;
 								case 3:
 									users[choose_user].delPlaylist();
@@ -543,8 +587,9 @@ Playlist actions
 					cin >> *fav_action;
 					users[choose_user].favSong(*fav_action);
 					break;
+					users[0].storeAll(users);
 				}
-				
+
 				case 4: {
 							if (fav_only_toggle == 0) {
 								fav_only_toggle = 1;
