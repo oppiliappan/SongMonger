@@ -19,6 +19,9 @@ class Song{
 			isfav = 0;
 		}
 
+		int checkfav() {
+			return isfav;
+		}
 		void addData();
 		void dispData(); //Done bare minimum
 		void favit(); // Done
@@ -84,11 +87,13 @@ class Library{
 		Song songlist[20];
 	public:
 		void dispSongs(); // complete
+		void dispfavSongs(); // complete
 
 		// depends on an incomplete function
 		void addSong(); //Songs --> Song because one song at a time
 		void delSong(); // New and done
 		void editSong();
+		void favinLibrary(int song_ind);
 		int songcount;
 };
 
@@ -100,6 +105,15 @@ void Library::dispSongs() {
 	}
 }
 
+void Library::dispfavSongs() {
+	cout << "\n";
+	for(int i=0, j=0; i<songcount; i++, j++){
+		cout << j + 1 << ". ";
+		if (songlist[i].checkfav() == 1) {
+			songlist[i].dispData();
+		}
+	}
+}
 // Depends on addData()
 void Library::addSong() {
 	char ch = 'n';
@@ -132,6 +146,10 @@ void Library::delSong() {
 	songcount--;
 }
 
+void Library::favinLibrary(int song_ind) {
+	song_ind++;
+	songlist[song_ind].favit();
+}
 // Inheriting Class
 class Playlist: public Library {
 	private:
@@ -200,12 +218,14 @@ class User {
 		}
 		void setup(); // for the first time setup
 		void dispAll();
+		void dispFav();
 
 		// Library function definitions
 		void addToLibrary();
 		void editLibrary();
 		void viewLibrary();
 		void delFromLibrary();
+		void favSong(int song_index);
 
 		// Playlist function definitions
 		void dispPlayName();
@@ -245,6 +265,15 @@ void User::dispAll() {
 	dispPlayName();
 }
 
+void User::dispFav() {
+	cout<<"\nName: "<<username;
+	cout<<"\nSongs: ";
+	if ((songs.songcount) == 0) cout<<"\nNo songs";
+	else {
+		songs.dispfavSongs();
+	}
+	dispPlayName();
+}
 void User::addToLibrary() {
 	songs.addSong();
 	cout<<"\nYou currently have "<<songs.songcount<<" songs\n";
@@ -260,6 +289,10 @@ void User::viewLibrary(){
 
 void User::delFromLibrary() {
 	songs.delSong();
+}
+
+void User::favSong(int song_index) {
+	songs.favinLibrary(song_index);
 }
 
 void User::dispPlayName() {
@@ -415,14 +448,20 @@ Playlist actions
 		char back_to_userselect = 'n';
 		do{
 			system("clear");
-			users[choose_user].dispAll();
+			int fav_only_toggle = 0;
+			if (fav_only_toggle == 0) {
+				users[choose_user].dispAll();
+			} else {
+				users[choose_user].dispFav();
+			}
 
 			// these are 'user actions'
 			cout<<"\n-------MAIN MENU-------\n";
 			cout<<"1. Library actions\n";
 			cout<<"2. Playlist actions\n";
-			cout<<"3. User Details\n";
-			cout<<"4. Back to user select\n";
+			cout<<"3. Add to favourites\n";
+			cout<<"4. Toggle Show Only Favourites\n";
+			cout<<"5. Back to user select\n";
 			cout<<"\n What would you like to do?\n";
 
 			int user_action;
@@ -498,11 +537,22 @@ Playlist actions
 						break;
 						}
 				case 3:{
-							system("clear");
-							users[choose_user].dispAll();
+					int *fav_action = new int;
+					cout << "Which song? ";
+					cin >> *fav_action;
+					users[choose_user].favSong(*fav_action);
+					break;
+				}
+				
+				case 4: {
+							if (fav_only_toggle == 0) {
+								fav_only_toggle = 1;
+							} else {
+								fav_only_toggle = 0;
+							}
 							break;
 						}
-				case 4:{
+				case 5: {
 							back_to_userselect = 'y';
 							break;
 						}
