@@ -314,6 +314,7 @@ void User::storeUserdata() {
 void User::readUserdata() {
 	ifstream file;
 	file.open("userdata.dat", ios::in | ios::binary);
+	file.seekg(User::usercount * (sizeof(User)), ios::beg);
 	file.read((char*)this, sizeof(User));
 	file.close();
 }
