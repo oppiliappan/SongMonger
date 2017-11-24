@@ -341,6 +341,7 @@ void User::dispPlayName() {
 	if (User::playlistcount == 0) cout<<"No playlists\n";
 	else{
 		for(int i=0; i<playlistcount; i++){
+			cout<<i + 1<<" ";
 			plists[i].dispPlayName();
 			cout<<"\n";
 		}
@@ -348,23 +349,54 @@ void User::dispPlayName() {
 }
 
 void User::editPlaylist() {
-//	int ch;
-//	cout << "Which playlist?";
-//	dispPlayName();
-//	cin>>ch;
-//
-//	int edit_choice;
-//	plists[ch].dispPlayName();
-//	cout<<"\n1. Add songs\n";
-//	cout<<"\n2. Remove songs\n";
-//	cout<<"\n3. Change playlist name\n";
-//	cin>>edit_choice;
-//
-//	switch(edit_choice){
-//		case 1:
-//			plists[ch].addSong();
-//	}
-//	plists[ch].dispSongs();
+	system("clear");
+	cout<<"Editing playlists\n";
+	dispPlayName();
+
+	int ch;
+	cout<<"Which playlist to edit?\n";
+	cin>>ch;
+	ch--; // Convert to array index
+
+	system("clear");
+
+	char continue_editing = 'y';
+	do{
+		system("clear");
+		plists[ch].dispSongs();
+		cout<<"\n";
+		cout<<"1. Add song\n";
+		cout<<"2. Remove song\n";
+		cout<<"3. Change song name\n";
+
+		int edit_choice;
+		cin>>edit_choice;
+
+		switch(edit_choice){
+			case 1:
+				system("clear");
+				songs.dispSongs();
+
+				cout<<"Which song?\n";
+				int songch;
+				cin>>songch;
+				plists[ch].addSong(getSong(songch-1));
+				cout<<"Song added!\n";
+				break;
+			case 2:
+				system("clear");
+				plists[ch].delSong();
+				break;
+			case 3:
+				system("clear");
+				plists[ch].setPlayName();
+				break;
+		}
+
+		cout<<"Continue editing? (y/n)\n";
+		cin>>continue_editing;
+	}while(continue_editing == 'y');
+
 }
 
 void User::delPlaylist() {
