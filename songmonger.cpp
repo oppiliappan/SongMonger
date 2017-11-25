@@ -368,33 +368,60 @@ void User::editPlaylist() {
 		cout<<"1. Add song\n";
 		cout<<"2. Remove song\n";
 		cout<<"3. Change song name\n";
+		cout<<"4. Back\n";
 
 		int edit_choice;
 		cin>>edit_choice;
 
 		switch(edit_choice){
-			case 1:
+			case 1:{
 				system("clear");
 				songs.dispSongs();
 
 				cout<<"Which song?\n";
-				int songch;
-				cin>>songch;
-				plists[ch].addSong(getSong(songch-1));
-				cout<<"Song added!\n";
+				char continue_adding='y';
+				do{
+					system("clear");
+					cout<<"----------------";
+					plists[playlistcount].dispPlayName();
+					cout<<"----------------";
+					cout<<"\n";
+
+					songs.dispSongs();
+
+					int ch;
+					cout<<"\nEnter song to be added to ";
+					plists[playlistcount].dispPlayName();
+					cout<<"\n";
+					cin>>ch;
+					plists[playlistcount].addSong(getSong(ch-1));
+					plists[playlistcount].songcount++;
+
+					cout<<"Add more songs?\n";
+					cin>>continue_adding;
+				}while(continue_adding == 'y');
+				cout<<"Continue editing? (y/n)\n";
+				cin>>continue_editing;
 				break;
+			}
+
 			case 2:
 				system("clear");
 				plists[ch].delSong();
+				cout<<"Continue editing? (y/n)\n";
+				cin>>continue_editing;
 				break;
 			case 3:
 				system("clear");
 				plists[ch].setPlayName();
+				cout<<"Continue editing? (y/n)\n";
+				cin>>continue_editing;
+				break;
+			case 4:
+				continue_editing = 'n';
 				break;
 		}
 
-		cout<<"Continue editing? (y/n)\n";
-		cin>>continue_editing;
 	}while(continue_editing == 'y');
 
 }
