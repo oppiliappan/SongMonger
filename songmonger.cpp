@@ -45,10 +45,10 @@ void Song::addData(){
 }
 // Display formatted song data
 void Song::dispData() {
-	cout<<setw(10)<<title;
-	cout<<setw(10)<<artist;
-	cout<<setw(10)<<album;
-	cout<<setw(10)<<duration;
+	cout<<setw(15)<<title;
+	cout<<setw(15)<<artist;
+	cout<<setw(15)<<album;
+	cout<<setw(15)<<duration;
 	if(isfav == 1)cout<<"\t*\n";
 	else cout<<"\n";
 }
@@ -104,11 +104,11 @@ class Library{
 
 void Library::dispSongs() {
 	cout<<"\n";
-	cout<<"Sl. no.";
-	cout<<setw(10)<<"Title";
-	cout<<setw(10)<<"Artist";
-	cout<<setw(10)<<"Album";
-	cout<<setw(10)<<"Duration";
+	cout<<"No.";
+	cout<<setw(15)<<"Title";
+	cout<<setw(15)<<"Artist";
+	cout<<setw(15)<<"Album";
+	cout<<setw(15)<<"Duration";
 	cout << "\n";
 	for(int i=0; i<songcount; i++){
 		cout << i + 1 << ". ";
@@ -268,7 +268,7 @@ void User::setup() {
 
 void User::dispAll() {
 	cout<<"\nName: "<<username;
-	cout<<"\n----------------------SONGS-----------------------";
+	cout<<"\n---------------------------SONGS--------------------------------";
 	if ((songs.songcount) == 0) cout<<"\nNo songs";
 	else{
 		songs.dispSongs();
@@ -344,7 +344,7 @@ void User::createPlaylist(){
 }
 
 void User::dispPlayName() {
-	cout<<"\n----------------------PLAYLISTS--------------------- \n";
+	cout<<"\n------------------------PLAYLISTS-------------------------------\n";
 	if (User::playlistcount == 0) cout<<"No playlists\n";
 	else{
 		for(int i=0; i<playlistcount; i++){
@@ -382,51 +382,53 @@ void User::editPlaylist() {
 
 		switch(edit_choice){
 			case 1:{
-					   system("clear");
-					   songs.dispSongs();
+				system("clear");
+				songs.dispSongs();
 
-					   cout<<"Which song?\n";
-					   char continue_adding='y';
-					   do{
-						   system("clear");
-						   cout<<"----------------";
-						   plists[playlistcount].dispPlayName();
-						   cout<<"----------------";
-						   cout<<"\n";
+				cout<<"Which song?\n";
+				char continue_adding='y';
 
-						   songs.dispSongs();
+				do{
+					system("clear");
+					cout<<"----------------";
+					plists[playlistcount].dispPlayName();
+					cout<<"----------------";
+					cout<<"\n";
 
-						   int ch;
-						   cout<<"\nEnter song to be added to ";
-						   plists[playlistcount].dispPlayName();
-						   cout<<"\n";
-						   cin>>ch;
-						   plists[playlistcount].addSong(getSong(ch-1));
-						   plists[playlistcount].songcount++;
+					songs.dispSongs();
 
-						   cout<<"Add more songs?\n";
-						   cin>>continue_adding;
-					   }while(continue_adding == 'y');
-					   cout<<"Continue editing? (y/n)\n";
-					   cin>>continue_editing;
-					   break;
-				   }
+					int ch;
+					cout<<"\nEnter song to be added to ";
+					plists[playlistcount].dispPlayName();
+					cout<<"\n";
+					cin>>ch;
+					plists[playlistcount].addSong(getSong(ch-1));
+					plists[playlistcount].songcount++;
+
+					cout<<"Add more songs?\n";
+					cin>>continue_adding;
+				}while(continue_adding == 'y');
+
+				cout<<"Continue editing? (y/n)\n";
+				cin>>continue_editing;
+			break;
+			}
 
 			case 2:
-				   system("clear");
-				   plists[ch].delSong();
-				   cout<<"Continue editing? (y/n)\n";
-				   cin>>continue_editing;
-				   break;
+				system("clear");
+				plists[ch].delSong();
+				cout<<"Continue editing? (y/n)\n";
+				cin>>continue_editing;
+				break;
 			case 3:
-				   system("clear");
-				   plists[ch].setPlayName();
-				   cout<<"Continue editing? (y/n)\n";
-				   cin>>continue_editing;
-				   break;
+				system("clear");
+				plists[ch].setPlayName();
+				cout<<"Continue editing? (y/n)\n";
+				cin>>continue_editing;
+				break;
 			case 4:
-				   continue_editing = 'n';
-				   break;
+				continue_editing = 'n';
+				break;
 		}
 
 	}while(continue_editing == 'y');
@@ -578,7 +580,7 @@ Playlist actions
 			}
 
 			// these are 'user actions'
-			cout<<"\n-------MAIN MENU-------\n";
+			cout<<"\n------------------------MAIN MENU-------------------------------\n";
 			cout<<"1. Library actions\n";
 			cout<<"2. Playlist actions\n";
 			cout<<"3. Add to favourites OR Remove from favourites\n";
@@ -600,6 +602,7 @@ Playlist actions
 						cout<<"1. Add songs\n";
 						cout<<"2. Edit songs\n";
 						cout<<"3. Delete songs\n";
+						cout<<"4. Back\n";
 
 						int lib_action;
 						cin>>lib_action;
@@ -615,17 +618,21 @@ Playlist actions
 								users[choose_user].delFromLibrary();
 								break;
 							case 4:
+								quit_lib_actions = 'y';
 								break;
 							default:
 								cout<<"Invalid option\n";
 						}
 
-						cout<<"Would you like to quit library actions? (y/n)\n";
-						cin>>quit_lib_actions;
+						if(quit_lib_actions == 'n'){
+							cout<<"Would you like to quit library actions? (y/n)\n";
+							cin>>quit_lib_actions;
+						}
+
 					} while (quit_lib_actions == 'n');
 					users[0].storeAll(users);
 					break;
-					   }
+				}
 
 				case 2:{
 					char quit_play_actions = 'n';
@@ -637,6 +644,7 @@ Playlist actions
 						cout<<"1. Create playlist\n";
 						cout<<"2. Edit existing playlist\n";
 						cout<<"3. Delete playlist\n";
+						cout<<"4. Back\n";
 
 						int play_action;
 						cin>>play_action;
@@ -651,12 +659,17 @@ Playlist actions
 							case 3:
 								users[choose_user].delPlaylist();
 								break;
+							case 4:
+								quit_play_actions = 'y';
+								break;
 							default:
 								cout<<"Invalid option\n";
 						}
 
-						cout<<"Would you like to quit playlist actions? (y/n)\n";
-						cin>>quit_play_actions;
+						if(quit_play_actions == 'n'){
+							cout<<"Would you like to quit playlist actions? (y/n)\n";
+							cin>>quit_play_actions;
+						}
 					} while (quit_play_actions == 'n');
 					break;
 				}
@@ -670,17 +683,18 @@ Playlist actions
 				}
 
 				case 4: {
-							if (fav_only_toggle == 0) {
-								fav_only_toggle = 1;
-							} else {
-								fav_only_toggle = 0;
-							}
-							break;
-						}
+					if (fav_only_toggle == 0) {
+						fav_only_toggle = 1;
+					}
+					else {
+						fav_only_toggle = 0;
+					}
+					break;
+				}
 				case 5: {
-							back_to_userselect = 'y';
-							break;
-						}
+					back_to_userselect = 'y';
+					break;
+				}
 			}
 		}while(back_to_userselect == 'n');
 
