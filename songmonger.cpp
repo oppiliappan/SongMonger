@@ -157,7 +157,7 @@ void Library::addSong() {
 	while (sfile.read((char*)&temp, sizeof(Song))) {
 		temp.dispData();
 	}
-	cout << "Select a song: ";
+	cout << "Select a song:\n";
 	cin >> ch;
 	sfile.seekg((ch - 1) * sizeof(Song), ios::beg);
 	sfile.read((char*)&temp, sizeof(Song));
@@ -260,6 +260,7 @@ class User {
 
 		// Library function definitions
 		void addToLibrary();
+		void addToGlobalLibrary();
 		void editLibrary();
 		void viewLibrary();
 		void delFromLibrary();
@@ -283,7 +284,7 @@ class User {
 
 		int playlistcount;
 		char isactivated; // Self explanatory - high quality comment
-}users[5];
+}users[5], admin;
 
 int User::usercount = 0;
 
@@ -317,6 +318,11 @@ void User::dispFav() {
 void User::addToLibrary() {
 	songs.addSong();
 	cout<<"\nYou currently have "<<songs.songcount<<" songs\n";
+}
+
+void User::addToGlobalLibrary(){
+	songs.adminAddSong();
+	cout<<"\nThere are currently "<<songs.songcount<<" songs in global Library\n";
 }
 
 void User::editLibrary() {
@@ -564,9 +570,10 @@ Playlist actions
 	// enter user select
 	char quit_program = 'n';
 	do{
+a: // Planned goto
 		char ch;
 		system("clear");
-		cout << "1. New User\n2. Existing User\n3. Quit Program\n";
+		cout << "1. New User\n2. Existing User\n3. Admin User\n4. Quit Program\n";
 		cin >> ch;
 		if (ch == '1') {
 			int i = 0;
@@ -582,6 +589,44 @@ Playlist actions
 			users[i].storeAll(users);
 		}
 		else if(ch == '3'){
+			system("clear");
+			cout<<"\nWelcome to Admin\n";
+			cout<<"1. Add to global library\n";
+			cout<<"2. Edit songs from global library\n";
+			cout<<"3. Remove songs from global library\n";
+			cout<<"4. Back\n";
+			cout<<"\n Choose a option...";
+
+			int admin_choice = -1;
+			cin>>admin_choice;
+
+			char quit_admin = 'n';
+
+			switch(admin_choice){
+				case 1:
+					cout<<"Adding songs to global library\n";
+					admin.addToGlobalLibrary();
+					break;
+				case 2:
+					cout<<"Editing songs from global library\n";
+					admin.editLibrary();
+					break;
+				case 3:
+					cout<<"Removing songs from global library\n";
+					admin.delFromLibrary();
+					break;
+				case 4:
+					quit_admin = 'y';
+					break;
+			}
+
+			if(quit_admin == 'n'){
+				cout<<"Quit Admin? [y/n]\n";
+				cin>>quit_admin;
+			}
+
+		}
+		else if(ch == '4'){
 			exit(0);
 		}
 
