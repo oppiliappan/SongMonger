@@ -64,8 +64,8 @@ void Song::favit(){
 // 2 for Album
 // 3 for Artist
 // 4 for Duration
-// This function is probably useless --> How on earth was it incomplete for so long?!
 // Illlogical to change duration of a song
+
 void Song::editData(){
 	int *ch = new int;
 	cout << "Edit options: \n1. Title\n2. Album Name\n3. Artist name\n";
@@ -117,6 +117,12 @@ void Library::dispSongs() {
 }
 
 void Library::dispfavSongs() {
+	cout << "\n";
+	cout<<"No.";
+	cout<<setw(15)<<"Title";
+	cout<<setw(15)<<"Artist";
+	cout<<setw(15)<<"Album";
+	cout<<setw(15)<<"Duration";
 	cout << "\n";
 	for(int i=0, j=0; i<songcount; i++, j++){
 		cout << j + 1 << ". ";
@@ -493,7 +499,11 @@ void User::readAll(User *userobj) {
 
 /* -------------------------- MAIN ----------------------------- */
 int main(){
-	cout<<"\t\t\tWelcome to SongMonger!\n";
+	system("clear");
+	cout<<"        Welcome to Songmonger!\n";
+	cout<<"   A music managment application in C++\n\n";
+	cout<<"        Hit Enter to continue";
+	cin.ignore();
 
 	/*
 	   TODO
