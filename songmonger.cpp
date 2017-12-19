@@ -132,7 +132,8 @@ void Library::dispfavSongs() {
 	}
 }
 // Depends on addData()
-void Library::addSong() {
+// For ADMIN
+void Library::adminAddSong() {
 	char ch = 'n';
 	do {
 		songlist[songcount].addData();
@@ -140,6 +141,27 @@ void Library::addSong() {
 		cout << "Add more? [y/n] ";
 		cin >> ch;
 	} while(ch == 'y');
+	ofstream sfile;
+	sfile.open("songs.dat", ios::binary | ios::app);
+	for (int i = 0; i < songcount; i++) {
+		sfile.write((char*)&songlist[i], sizeof(Song));
+	}
+}
+
+// For Users
+void Library::addSong() {
+	ifstream sfile;
+	Song temp;
+	int ch;
+	while (sfile.read((char*)&temp, sizeof(Song))) {
+		temp.dispData();
+	}
+	cout << "Select a song: ";
+	cin >> ch;
+	sfile.seekg((ch - 1) * sizeof(Song), ios::beg);
+	sfile.read((char*)&temp, sizeof(Song))
+	songlist[songcount] = temp;
+	songcount++;
 }
 
 void Library::editSong() {
