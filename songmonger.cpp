@@ -183,6 +183,7 @@ class Playlist: public Library {
 		}
 		void setPlayName();
 		void dispPlayName(); // complete
+		void dispPlayAll();
 		void addSong(Song);
 		void delSong();
 };
@@ -194,6 +195,12 @@ void Playlist::setPlayName() {
 
 void Playlist::dispPlayName() {
 	cout<<playname<<" ("<<songcount<<" songs)";
+}
+
+void Playlist::dispPlayAll(){
+	cout<<"-------------------------------------------------------\n";
+	dispPlayName();
+	dispSongs();
 }
 
 // Is this function overloading attempt correct?
@@ -248,6 +255,7 @@ class User {
 		void dispPlayName();
 		void editPlaylist();
 		void delPlaylist();
+		void viewPlaylist(int);
 		static int usercount; // this is the static variable we deserve
 
 		// File handling
@@ -354,7 +362,7 @@ void User::dispPlayName() {
 	if (User::playlistcount == 0) cout<<"No playlists\n";
 	else{
 		for(int i=0; i<playlistcount; i++){
-			cout<<i + 1<<" ";
+			cout<<i + 1<<". ";
 			plists[i].dispPlayName();
 			cout<<"\n";
 		}
@@ -450,6 +458,10 @@ void User::delPlaylist() {
 		if(i < sizeof(Playlist)/2) plists[i] = plists[i + 1]; // if statement prevents segmentation faults
 	}
 	playlistcount--;
+}
+
+void User::viewPlaylist(int i){
+	plists[i].dispPlayAll();
 }
 
 void User::storeUsercount() {
@@ -650,6 +662,9 @@ Playlist actions
 					// enter play actions
 					do{
 						system("clear");
+						for(int i=0; i<users[choose_user].playlistcount; i++){
+							users[choose_user].viewPlaylist(i);
+						}
 						cout<<"-------Playlist actions-------\n";
 						cout<<"1. Create playlist\n";
 						cout<<"2. Edit existing playlist\n";

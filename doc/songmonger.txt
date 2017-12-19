@@ -1,5 +1,36 @@
-Songmonger
+NAME
+	songmonger - music management system written entirely in C++
 
-Music management application in C++
+DESCRIPTION
 
+	Songmonger is a simple program written entirely in C++ that helps
+	manage music.
+	
+	It implements data file handling, so information is preserved 
+	through sessions
 
+TUTORIAL
+	
+	Songmonger is entirely menu driven.
+
+	Users menu:
+		1. New User - Add a new user to the data base
+		2. Existing User - Login to an existing user
+		3. Quit Program - Quits the program
+
+	Main menu:
+		1. Library actions - Manipulate the songs of the user
+		2. Playlist actions - Manage playlists
+		3. Add to favourites OR Remove from favourites - Add/Remove song to/from favourites
+		4. Toggle show only Favourites
+		5. Back to user select
+
+	Library Actions:
+		1. Add songs - create a song and add to current user's library
+		2. Edit songs - edit meta-data of songs in the library
+		3. Delete songs - remove songs from current user's library
+		4. Back
+
+	Playlist Actions:
+		1. Create playlist - add songs from Library to a named playlist
+		2. 
