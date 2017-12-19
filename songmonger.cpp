@@ -99,6 +99,7 @@ class Library{
 		void editSong();
 		void favinLibrary(int song_ind);
 		int songcount;
+		void adminAddSong();
 		Song getSong(int);
 };
 
@@ -159,7 +160,7 @@ void Library::addSong() {
 	cout << "Select a song: ";
 	cin >> ch;
 	sfile.seekg((ch - 1) * sizeof(Song), ios::beg);
-	sfile.read((char*)&temp, sizeof(Song))
+	sfile.read((char*)&temp, sizeof(Song));
 	songlist[songcount] = temp;
 	songcount++;
 }
