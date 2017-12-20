@@ -590,6 +590,7 @@ a: // Planned goto
 		}
 		else if(ch == '3'){
 			system("clear");
+b:
 			cout<<"\nWelcome to Admin\n";
 			cout<<"1. Add to global library\n";
 			cout<<"2. Edit songs from global library\n";
@@ -623,6 +624,9 @@ a: // Planned goto
 			if(quit_admin == 'n'){
 				cout<<"Quit Admin? [y/n]\n";
 				cin>>quit_admin;
+			}
+			if(quit_admin == 'n'){
+				goto b;
 			}
 
 		}
