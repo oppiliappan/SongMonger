@@ -367,7 +367,7 @@ void User::createPlaylist(){
 		plists[playlistcount].addSong(getSong(ch-1));
 		plists[playlistcount].songcount++;
 
-		cout<<"Add more songs?\n";
+		cout<<"Add more songs? [y/n]\n";
 		cin>>continue_adding;
 	}while(continue_adding == 'y');
 
@@ -628,6 +628,9 @@ b:
 			if(quit_admin == 'n'){
 				goto b;
 			}
+			else if(quit_admin == 'y'){
+				goto a;
+			}
 
 		}
 		else if(ch == '4'){
@@ -636,6 +639,7 @@ b:
 
 
 		users[0].readAll(users); // loads all users
+		system("clear");
 		cout << "Currently Active Users: " << User::usercount;
 		for(int i = 0; i < User::usercount; i++) {
 			// this will make sure only existing users show up
