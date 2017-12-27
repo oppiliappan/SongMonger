@@ -705,9 +705,8 @@ b:
 						users[choose_user].viewLibrary();
 						cout<<"\n-------Library actions-------\n";
 						cout<<"1. Add songs\n";
-						cout<<"2. Edit songs\n";
-						cout<<"3. Delete songs\n";
-						cout<<"4. Back\n";
+						cout<<"2. Delete songs\n";
+						cout<<"3. Back\n";
 
 						int lib_action;
 						cin>>lib_action;
@@ -717,12 +716,9 @@ b:
 								users[choose_user].addToLibrary();
 								break;
 							case 2:
-								users[choose_user].editLibrary();
-								break;
-							case 3:
 								users[choose_user].delFromLibrary();
 								break;
-							case 4:
+							case 3:
 								quit_lib_actions = 'y';
 								break;
 							default:
