@@ -650,13 +650,13 @@ b:
 			exit(0);
 		}
 
+		users[0].readAll(users); // loads all users
 		if (User::usercount == 0) {
 			cout << "No users!";
 			cin.ignore();
 			cin.ignore();
 			goto a;
 		}
-		users[0].readAll(users); // loads all users
 		system("clear");
 		cout << "Currently Active Users: " << User::usercount;
 		for(int i = 0; i < User::usercount; i++) {
