@@ -167,7 +167,6 @@ void Library::addSong() {
 	cin >> ch;
 	sfile.clear();
 	sfile.seekg((ch - 1) * sizeof(Song), ios::beg);
-	cout << sfile.tellg();
 	sfile.read((char*)&temp, sizeof(Song));
 	for (int i = 0; i < songcount; i++) {
 		if (strcmp(songlist[i].gettitle(), temp.gettitle()) == 0) {
