@@ -24,6 +24,10 @@ class Song{
 		int checkfav() {
 			return isfav;
 		}
+		
+		char* gettitle() {
+			return title;
+		}
 		void addData();
 		void dispData(); //Done bare minimum
 		void favit(); // Done
@@ -161,9 +165,16 @@ void Library::addSong() {
 	}
 	cout << "Select a song:\n";
 	cin >> ch;
-	ch--;
-	sfile.seekg((ch) * sizeof(Song), ios::beg);
+	sfile.clear();
+	sfile.seekg((ch - 1) * sizeof(Song), ios::beg);
+	cout << sfile.tellg();
 	sfile.read((char*)&temp, sizeof(Song));
+	for (int i = 0; i < songcount; i++) {
+		if (strcmp(songlist[i].gettitle(), temp.gettitle()) == 0) {
+			cout << "You already have this song!";
+			return;
+		}
+	}
 	songlist[songcount] = temp;
 	songcount++;
 }
@@ -640,7 +651,12 @@ b:
 			exit(0);
 		}
 
-
+		if (User::usercount == 0) {
+			cout << "No users!";
+			cin.ignore();
+			cin.ignore();
+			goto a;
+		}
 		users[0].readAll(users); // loads all users
 		system("clear");
 		cout << "Currently Active Users: " << User::usercount;
