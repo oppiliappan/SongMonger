@@ -152,14 +152,17 @@ void Library::adminAddSong() {
 // For Users
 void Library::addSong() {
 	ifstream sfile;
+	sfile.open("songs.dat", ios::binary);
 	Song temp;
 	int ch;
+	cout << "Obtaining songs\n";
 	while (sfile.read((char*)&temp, sizeof(Song))) {
 		temp.dispData();
 	}
 	cout << "Select a song:\n";
 	cin >> ch;
-	sfile.seekg((ch - 1) * sizeof(Song), ios::beg);
+	ch--;
+	sfile.seekg((ch) * sizeof(Song), ios::beg);
 	sfile.read((char*)&temp, sizeof(Song));
 	songlist[songcount] = temp;
 	songcount++;
