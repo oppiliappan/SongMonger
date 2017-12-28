@@ -406,6 +406,10 @@ void User::dispPlayName() {
 void User::editPlaylist() {
 	system("clear");
 	cout<<"Editing playlists\n";
+	if (playlistcount == 0) {
+		cout << "No playlists!";
+		return;
+	}
 	dispPlayName();
 
 	int ch;
@@ -422,7 +426,7 @@ void User::editPlaylist() {
 		cout<<"\n";
 		cout<<"1. Add song\n";
 		cout<<"2. Remove song\n";
-		cout<<"3. Change song name\n";
+		cout<<"3. Change playlist name\n";
 		cout<<"4. Back\n";
 
 		int edit_choice;
@@ -437,9 +441,10 @@ void User::editPlaylist() {
 				char continue_adding='y';
 
 				do{
+					int p_index = playlistcount - 1;
 					system("clear");
 					cout<<"----------------";
-					plists[playlistcount].dispPlayName();
+					plists[p_index].dispPlayName();
 					cout<<"----------------";
 					cout<<"\n";
 
@@ -447,11 +452,11 @@ void User::editPlaylist() {
 
 					int ch;
 					cout<<"\nEnter song to be added to ";
-					plists[playlistcount].dispPlayName();
+					plists[p_index].dispPlayName();
 					cout<<"\n";
 					cin>>ch;
-					plists[playlistcount].addSong(getSong(ch-1));
-					plists[playlistcount].songcount++;
+					plists[p_index].addSong(getSong(ch-1));
+					plists[p_index].songcount++;
 
 					cout<<"Add more songs?\n";
 					cin>>continue_adding;
