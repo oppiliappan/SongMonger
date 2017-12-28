@@ -1,3 +1,13 @@
+/*
+ * SongMonger
+ * Music management in C++ with the
+ * help of data file handling
+ *
+ * By:
+ * Akshay XII B
+ * Atharva XII B
+ */
+
 #include <iostream>
 #include <fstream>
 #include <string.h>
@@ -28,7 +38,7 @@ class Song{
 		void dispData(); //Done bare minimum
 		void favit(); // Done
 		void editData(); //Done for now
-}; 
+};
 // Enter song data for the first time
 void Song::addData(){
 	cout<<"\nEnter title: ";
