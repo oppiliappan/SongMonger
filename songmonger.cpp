@@ -103,7 +103,9 @@ class Library{
 		void editSong();
 		void favinLibrary(int song_ind);
 		int songcount;
+		void load();
 		void adminAddSong();
+		void storeSong();
 		Song getSong(int);
 };
 
@@ -138,7 +140,15 @@ void Library::dispfavSongs() {
 }
 // Depends on addData()
 // For ADMIN
+
+void Library::load() {
+	ifstream file;
+	file.open("adminsongcount.txt");
+	file >> songcount;
+}
+
 void Library::adminAddSong() {
+	load();
 	char ch = 'n';
 	do {
 		songlist[songcount].addData();
@@ -146,11 +156,13 @@ void Library::adminAddSong() {
 		cout << "Add more? [y/n] ";
 		cin >> ch;
 	} while(ch == 'y');
-	ofstream sfile;
+	ofstream sfile, songcountfile;
 	sfile.open("songs.dat", ios::binary | ios::app);
+	songcountfile.open("adminsongcount.txt");
 	for (int i = 0; i < songcount; i++) {
 		sfile.write((char*)&songlist[i], sizeof(Song));
 	}
+	songcountfile << songcount;
 }
 
 // For Users
@@ -160,8 +172,11 @@ void Library::addSong() {
 	Song temp;
 	int ch;
 	cout << "Obtaining songs\n";
+	int i = 1;
 	while (sfile.read((char*)&temp, sizeof(Song))) {
+		cout << i;
 		temp.dispData();
+		i++;
 	}
 	cout << "Select a song:\n";
 	cin >> ch;
