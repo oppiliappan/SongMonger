@@ -105,6 +105,8 @@ class Library{
 		int songcount;
 		void load();
 		void adminAddSong();
+		void adminDelSong();
+		void adminEditSong();
 		void storeSong();
 		Song getSong(int);
 };
@@ -142,9 +144,13 @@ void Library::dispfavSongs() {
 // For ADMIN
 
 void Library::load() {
-	ifstream file;
+	ifstream file, sfile;
 	file.open("adminsongcount.txt");
+	sfile.open("songs.dat", ios::binary);
 	file >> songcount;
+	for (int i = 0; i < songcount; i++) {
+		sfile.read((char*)&songlist[i], sizeof(Song));
+	}
 }
 
 void Library::adminAddSong() {
@@ -163,6 +169,25 @@ void Library::adminAddSong() {
 		sfile.write((char*)&songlist[i], sizeof(Song));
 	}
 	songcountfile << songcount;
+}
+
+void Library::adminDelSong() {
+	char sname[80];
+	Song ob;
+	fstream file, tempobj;
+	file.open("songs.dat", ios::binary | ios::in | ios::out);
+	file.open("temp.dat", ios::binary | ios::in | ios::out);
+	dispSongs();
+	cout << "Which song to delete? ";
+	cin.ignore();
+	fgets(sname, 80, stdin);
+	while (file.read((char*)&ob, sizeof(Song))) {
+		if (strcmp(ob.gettitle(), sname) != 0) {
+			tempobj.write((char*)&ob, sizeof(Song));
+		}
+	}
+	remove("songs.dat");
+	rename("temp.dat", "songs.dat");
 }
 
 // For Users
@@ -292,6 +317,7 @@ class User {
 		void editLibrary();
 		void viewLibrary();
 		void delFromLibrary();
+		void delFromGlobalLibrary();
 		Song getSong(int x);
 		void favSong(int song_index);
 
@@ -363,6 +389,10 @@ void User::viewLibrary(){
 
 void User::delFromLibrary() {
 	songs.delSong();
+}
+
+void User::delFromGlobalLibrary() {
+	songs.adminDelSong();
 }
 
 void User::favSong(int song_index) {
@@ -647,7 +677,7 @@ b:
 					break;
 				case 3:
 					cout<<"Removing songs from global library\n";
-					admin.delFromLibrary();
+					admin.delFromGlobalLibrary();
 					break;
 				case 4:
 					quit_admin = 'y';
