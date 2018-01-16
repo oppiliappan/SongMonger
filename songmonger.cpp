@@ -7,6 +7,7 @@
 
 using namespace std;
 
+
 // How about making this a queue?
 class Song{
 	private:
@@ -32,7 +33,7 @@ class Song{
 		void dispData(); //Done bare minimum
 		void favit(); // Done
 		void editData(); //Done for now
-}; 
+};
 // Enter song data for the first time
 void Song::addData(){
 	cout<<"\nEnter title: ";
@@ -47,6 +48,7 @@ void Song::addData(){
 	cout<<"Enter duration (sec.): ";
 	cin>>duration;
 }
+
 // Display formatted song data
 void Song::dispData() {
 	cout<<setw(15)<<title;
@@ -190,8 +192,10 @@ void Library::adminDelSong() {
 	rename("temp.dat", "songs.dat");
 }
 
+
 // For Users
 void Library::addSong() {
+	system("clear");
 	ifstream sfile;
 	sfile.open("songs.dat", ios::binary);
 	Song temp;
@@ -216,6 +220,10 @@ void Library::addSong() {
 	}
 	songlist[songcount] = temp;
 	songcount++;
+	cout<<"Add another? (y/n)";
+	char choice = 'n';
+	cin>>choice;
+	if(choice == 'y') addSong();
 }
 
 void Library::editSong() {
@@ -633,7 +641,7 @@ Playlist actions
 	// enter user select
 	char quit_program = 'n';
 	do{
-a: // Planned goto
+a:
 		char ch;
 		system("clear");
 		cout << "1. New User\n2. Existing User\n3. Admin User\n4. Quit Program\n";
@@ -652,8 +660,8 @@ a: // Planned goto
 			users[i].storeAll(users);
 		}
 		else if(ch == '3'){
-			system("clear");
 b:
+			system("clear");
 			cout<<"\nWelcome to Admin\n";
 			cout<<"1. Add to global library\n";
 			cout<<"2. Edit songs from global library\n";
