@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <cstdlib>
+#include <cstdio>
+#include <errno.h>
 #include <iomanip>
 
 using namespace std;
@@ -175,21 +177,37 @@ void Library::adminAddSong() {
 
 void Library::adminDelSong() {
 	char sname[80];
+	int count;
 	Song ob;
-	fstream file, tempobj;
-	file.open("songs.dat", ios::binary | ios::in | ios::out);
-	file.open("temp.dat", ios::binary | ios::in | ios::out);
+	ifstream file;
+	ofstream tempobj;
+	fstream countfile;
+	file.open("songs.dat", ios::binary);
+	tempobj.open("temp.dat", ios::binary);
+	countfile.open("adminsongcount.txt");
+	if(!countfile) {
+		cout << "err: " << strerror(errno) << endl;
+	}
 	dispSongs();
-	cout << "Which song to delete? ";
+	cout << "Name the song to delete: ";
 	cin.ignore();
-	fgets(sname, 80, stdin);
+	cin.get(sname, 80);
 	while (file.read((char*)&ob, sizeof(Song))) {
 		if (strcmp(ob.gettitle(), sname) != 0) {
 			tempobj.write((char*)&ob, sizeof(Song));
+			cout << "wrote: " << sname << "because it didn't match" << ob.gettitle();
 		}
 	}
+	countfile >> count;
+	count--;
+	countfile << count;
+	file.close();
+	tempobj.close();
+	countfile.close();
 	remove("songs.dat");
-	rename("temp.dat", "songs.dat");
+	if(rename("temp.dat", "songs.dat") == -1) {
+		cout << "Error: " << strerror(errno) << endl;
+	}
 }
 
 
