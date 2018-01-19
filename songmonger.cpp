@@ -100,6 +100,7 @@ class Library{
 	public:
 		int songcount;
 		void dispSongs(); // complete
+		void dispGlobalSongs();
 		void dispfavSongs(); // complete
 
 		// depends on an incomplete function
@@ -126,6 +127,20 @@ void Library::dispSongs() {
 	cout<<setw(15)<<"Duration";
 	cout << "\n";
 	for(int i=0; i<songcount; i++){
+		cout << i + 1 << ". ";
+		songlist[i].dispData();
+	}
+}
+
+void Library::dispGlobalSongs() {
+	cout<<"\n";
+	cout<<"No.";
+	cout<<setw(15)<<"Title";
+	cout<<setw(15)<<"Artist";
+	cout<<setw(15)<<"Album";
+	cout<<setw(15)<<"Duration";
+	cout << "\n";
+	for(int i=0; i<getglobalsongcount(); i++){
 		cout << i + 1 << ". ";
 		songlist[i].dispData();
 	}
@@ -192,9 +207,10 @@ void Library::adminAddSong() {
 }
 
 void Library::adminDelSong() {
-	char sname[80];
+	int index_to_delete, i = 0;
 	int count;
 	Song ob;
+	load();
 	ifstream file;
 	ofstream tempobj;
 	fstream countfile;
@@ -205,16 +221,20 @@ void Library::adminDelSong() {
 		cout << "err: " << strerror(errno) << endl;
 	}
 	dispSongs();
-	cout << "Name the song to delete: ";
+	cout << "Which song? ";
 	cin.ignore();
-	cin.get(sname, 80);
+	cin >> index_to_delete;
 	while (file.read((char*)&ob, sizeof(Song))) {
-		if (strcmp(ob.gettitle(), sname) != 0) {
+		i++;
+		if (i != index_to_delete) {
 			tempobj.write((char*)&ob, sizeof(Song));
+			cout << "wrote ";
 		}
 	}
 	countfile >> count;
+	cout << "count: " << count;
 	count--;
+	cout << "\ncount: " << count;
 	countfile << count;
 	file.close();
 	tempobj.close();
