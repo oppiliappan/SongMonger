@@ -98,6 +98,7 @@ class Library{
 	protected:
 		Song songlist[20];
 	public:
+		int songcount;
 		void dispSongs(); // complete
 		void dispfavSongs(); // complete
 
@@ -106,7 +107,8 @@ class Library{
 		void delSong(); // New and done
 		void editSong();
 		void favinLibrary(int song_ind);
-		int songcount;
+		int getglobalsongcount();
+		void incrementsongcount();
 		void load();
 		void adminAddSong();
 		void adminDelSong();
@@ -144,9 +146,23 @@ void Library::dispfavSongs() {
 		}
 	}
 }
-// Depends on addData()
-// For ADMIN
 
+int Library::getglobalsongcount() {
+	ifstream countfile;
+	countfile.open("adminsongcount.txt");
+	countfile >> songcount;
+	return songcount;
+}
+
+void Library::incrementsongcount() {
+	fstream countfile;
+	countfile.open("adminsongcount.txt");
+	countfile >> songcount;
+	songcount++;
+	countfile << songcount;
+}
+
+// For ADMIN
 void Library::load() {
 	ifstream file, sfile;
 	file.open("adminsongcount.txt");
@@ -167,7 +183,7 @@ void Library::adminAddSong() {
 		cin >> ch;
 	} while(ch == 'y');
 	ofstream sfile, songcountfile;
-	sfile.open("songs.dat", ios::binary | ios::app);
+	sfile.open("songs.dat", ios::binary);
 	songcountfile.open("adminsongcount.txt");
 	for (int i = 0; i < songcount; i++) {
 		sfile.write((char*)&songlist[i], sizeof(Song));
@@ -195,7 +211,6 @@ void Library::adminDelSong() {
 	while (file.read((char*)&ob, sizeof(Song))) {
 		if (strcmp(ob.gettitle(), sname) != 0) {
 			tempobj.write((char*)&ob, sizeof(Song));
-			cout << "wrote: " << sname << "because it didn't match" << ob.gettitle();
 		}
 	}
 	countfile >> count;
@@ -395,6 +410,7 @@ void User::dispFav() {
 	}
 	dispPlayName();
 }
+
 void User::addToLibrary() {
 	songs.addSong();
 	cout<<"\nYou currently have "<<songs.songcount<<" songs\n";
@@ -402,7 +418,7 @@ void User::addToLibrary() {
 
 void User::addToGlobalLibrary(){
 	songs.adminAddSong();
-	cout<<"\nThere are currently "<<songs.songcount<<" songs in global Library\n";
+	cout<<"\nThere are currently "<<songs.getglobalsongcount()<<" songs in global Library\n";
 }
 
 void User::editLibrary() {
@@ -449,7 +465,7 @@ void User::createPlaylist(){
 		cout<<"\n";
 		cin>>ch;
 		plists[playlistcount].addSong(getSong(ch-1));
-		plists[playlistcount].songcount++;
+		plists[playlistcount].incrementsongcount();
 
 		cout<<"Add more songs? [y/n]\n";
 		cin>>continue_adding;
