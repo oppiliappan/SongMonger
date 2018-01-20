@@ -113,7 +113,6 @@ class Library{
 		void load();
 		void adminAddSong();
 		void adminDelSong();
-		void adminEditSong();
 		void storeSong();
 		Song getSong(int);
 };
@@ -208,7 +207,6 @@ void Library::adminAddSong() {
 
 void Library::adminDelSong() {
 	int index_to_delete, i = 0;
-	int count;
 	Song ob;
 	load();
 	ifstream file;
@@ -231,14 +229,15 @@ void Library::adminDelSong() {
 			cout << "wrote ";
 		}
 	}
-	countfile >> count;
-	cout << "count: " << count;
-	count--;
-	cout << "\ncount: " << count;
-	countfile << count;
+	countfile >> songcount;
+	cout << "count: " << songcount;
+	songcount--;
+	countfile.close();
+	remove("adminsongcount.txt");
+	ofstream cf("adminsongcount.txt");
+	cf << songcount;
 	file.close();
 	tempobj.close();
-	countfile.close();
 	remove("songs.dat");
 	if(rename("temp.dat", "songs.dat") == -1) {
 		cout << "Error: " << strerror(errno) << endl;
@@ -255,6 +254,11 @@ void Library::addSong() {
 	int ch;
 	cout << "Obtaining songs\n";
 	int i = 1;
+	cout<<"No.";
+	cout<<setw(15)<<"Title";
+	cout<<setw(15)<<"Artist";
+	cout<<setw(15)<<"Album";
+	cout<<setw(15)<<"Duration";
 	while (sfile.read((char*)&temp, sizeof(Song))) {
 		cout << i;
 		temp.dispData();
@@ -397,11 +401,12 @@ class User {
 		void storeAll(User *userobj);
 		void readAll(User *userobj);
 
-		int playlistcount;
+		static int playlistcount;
 		char isactivated; // Self explanatory - high quality comment
 }users[5], admin;
 
 int User::usercount = 0;
+int User::playlistcount = 0;
 
 void User::setup() {
 	cout << "Enter your username (No spaces or special characters): ";
@@ -485,7 +490,7 @@ void User::createPlaylist(){
 		cout<<"\n";
 		cin>>ch;
 		plists[playlistcount].addSong(getSong(ch-1));
-		plists[playlistcount].incrementsongcount();
+		plists[playlistcount].songcount++;
 
 		cout<<"Add more songs? [y/n]\n";
 		cin>>continue_adding;
@@ -718,8 +723,8 @@ b:
 			system("clear");
 			cout<<"\nWelcome to Admin\n";
 			cout<<"1. Add to global library\n";
-			cout<<"2. Edit songs from global library\n";
-			cout<<"3. Remove songs from global library\n";
+			// cout<<"2. Edit songs from global library\n";
+			cout<<"2. Remove songs from global library\n";
 			cout<<"4. Back\n";
 			cout<<"\n Choose a option...";
 
@@ -733,11 +738,13 @@ b:
 					cout<<"Adding songs to global library\n";
 					admin.addToGlobalLibrary();
 					break;
+				/*
 				case 2:
 					cout<<"Editing songs from global library\n";
 					admin.editLibrary();
 					break;
-				case 3:
+				*/
+				case 2:
 					cout<<"Removing songs from global library\n";
 					admin.delFromGlobalLibrary();
 					break;
@@ -883,6 +890,7 @@ b:
 							cin>>quit_play_actions;
 						}
 					} while (quit_play_actions == 'n');
+					users[0].storeAll(users);
 					break;
 				}
 				case 3:{
