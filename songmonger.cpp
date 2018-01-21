@@ -392,6 +392,7 @@ class User {
 		void dispPlayName();
 		void editPlaylist();
 		void delPlaylist();
+		void viewPlaylist();
 		static int usercount; // this is the static variable we deserve
 
 		// File handling
@@ -619,6 +620,7 @@ void User::viewPlaylist(){
 	dispPlayName();
 	int ch;
 	cin>>ch;
+	ch--;
 	plists[ch].dispSongs();
 }
 
@@ -875,7 +877,7 @@ b:
 						cout<<"2. Edit existing playlist\n";
 						cout<<"3. Delete playlist\n";
 						cout<<"4. View playlist\n";
-						cout<<"4. Back\n";
+						cout<<"5. Back\n";
 
 						int play_action;
 						cin>>play_action;
