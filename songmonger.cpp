@@ -616,12 +616,17 @@ void User::delPlaylist() {
 }
 
 void User::viewPlaylist(){
-	cout<<"Which playlist?";
-	dispPlayName();
-	int ch;
-	cin>>ch;
-	ch--;
-	plists[ch].dispSongs();
+	if(playlistcount == 0){
+		cout<<"No playlists!\n";
+	}
+	else:{
+		cout<<"Which playlist?";
+		dispPlayName();
+		int ch;
+		cin>>ch;
+		ch--;
+		plists[ch].dispSongs();
+	}
 }
 
 void User::storeUsercount() {
