@@ -1,36 +1,40 @@
 NAME
-	songmonger - music management system written entirely in C++
+    songmonger - music management system written entirely in C++, with file
+    handling.
 
 DESCRIPTION
 
-	Songmonger is a simple program written entirely in C++ that helps
-	manage music.
-	
-	It implements data file handling, so information is preserved 
-	through sessions
+    Songmonger is a simple program written entirely in C++ that helps
+    manage music.
+
+    It implements data file handling, so information is preserved 
+    through sessions.
 
 TUTORIAL
-	
-	Songmonger is entirely menu driven.
 
-	Users menu:
-		1. New User - Add a new user to the data base
-		2. Existing User - Login to an existing user
-		3. Quit Program - Quits the program
+    Songmonger is entirely menu driven.
 
-	Main menu:
-		1. Library actions - Manipulate the songs of the user
-		2. Playlist actions - Manage playlists
-		3. Add to favourites OR Remove from favourites - Add/Remove song to/from favourites
-		4. Toggle show only Favourites
-		5. Back to user select
+    Users menu:
+        1. New User      - Add a new user to the data base
+        2. Existing User - Login to an existing user
+        3. Admin User    - Login as an admin, admin can add songs to global library
+        4. Quit Program
 
-	Library Actions:
-		1. Add songs - create a song and add to current user's library
-		2. Edit songs - edit meta-data of songs in the library
-		3. Delete songs - remove songs from current user's library
-		4. Back
+    Main menu:
+        1. Library actions                             - Manipulate the songs of the user
+        2. Playlist actions                            - Manage playlists
+        3. Add to favourites OR Remove from favourites - Add/Remove song to/from favourites
+        4. Toggle show only Favourites
+        5. Back to user select
 
-	Playlist Actions:
-		1. Create playlist - add songs from Library to a named playlist
-		2. 
+    Library Actions:
+        1. Add songs    -  create a song and add to current user's library
+        2. Edit songs   -  edit meta-data of songs in the library
+        3. Delete songs -  remove songs from current user's library
+        4. Back
+
+    Playlist Actions:
+        1. Create playlist - add songs from Library to a named playlist
+        2. Edit playlist   - change playlist name, and songs in a playlist
+        3. Delete playlist
+        4. View playlist   - get a detailed description of songs in a playlist
