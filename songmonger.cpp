@@ -365,6 +365,7 @@ class User {
 		Playlist plists[10];
 
 	public:
+		int playlistcount;
 		User() {
 			strcpy(username, "Jawn_dough");
 			isactivated = 'n';
@@ -403,12 +404,10 @@ class User {
 		void storeAll(User *userobj);
 		void readAll(User *userobj);
 
-		static int playlistcount;
 		char isactivated; // Self explanatory - high quality comment
 }users[5], admin;
 
 int User::usercount = 0;
-int User::playlistcount = 0;
 
 void User::setup() {
 	cout << "Enter your username (No spaces or special characters): ";
@@ -619,7 +618,7 @@ void User::viewPlaylist(){
 	if(playlistcount == 0){
 		cout<<"No playlists!\n";
 	}
-	else:{
+	else{
 		cout<<"Which playlist?";
 		dispPlayName();
 		int ch;
