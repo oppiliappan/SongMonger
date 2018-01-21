@@ -1,21 +1,14 @@
-/*
- * SongMonger
- * Music management in C++ with the
- * help of data file handling
- *
- * By:
- * Akshay XII B
- * Atharva XII B
- */
-
 #include <iostream>
 #include <fstream>
 #include <string.h>
 #include <stdlib.h>
 #include <cstdlib>
+#include <cstdio>
+#include <errno.h>
 #include <iomanip>
 
 using namespace std;
+
 
 // How about making this a queue?
 class Song{
@@ -34,6 +27,10 @@ class Song{
 		int checkfav() {
 			return isfav;
 		}
+		
+		char* gettitle() {
+			return title;
+		}
 		void addData();
 		void dispData(); //Done bare minimum
 		void favit(); // Done
@@ -50,9 +47,10 @@ void Song::addData(){
 	cout<<"Enter album: ";
 	//fgets(album, 20, stdin);
 	cin>>album;
-	cout<<"Enter duration (sec.): ";
+	cout<<"Enter duration (min.): ";
 	cin>>duration;
 }
+
 // Display formatted song data
 void Song::dispData() {
 	cout<<setw(15)<<title;
@@ -100,7 +98,9 @@ class Library{
 	protected:
 		Song songlist[20];
 	public:
+		int songcount;
 		void dispSongs(); // complete
+		void dispGlobalSongs();
 		void dispfavSongs(); // complete
 
 		// depends on an incomplete function
@@ -108,7 +108,12 @@ class Library{
 		void delSong(); // New and done
 		void editSong();
 		void favinLibrary(int song_ind);
-		int songcount;
+		int getglobalsongcount();
+		void incrementsongcount();
+		void load();
+		void adminAddSong();
+		void adminDelSong();
+		void storeSong();
 		Song getSong(int);
 };
 
@@ -121,6 +126,20 @@ void Library::dispSongs() {
 	cout<<setw(15)<<"Duration";
 	cout << "\n";
 	for(int i=0; i<songcount; i++){
+		cout << i + 1 << ". ";
+		songlist[i].dispData();
+	}
+}
+
+void Library::dispGlobalSongs() {
+	cout<<"\n";
+	cout<<"No.";
+	cout<<setw(15)<<"Title";
+	cout<<setw(15)<<"Artist";
+	cout<<setw(15)<<"Album";
+	cout<<setw(15)<<"Duration";
+	cout << "\n";
+	for(int i=0; i<getglobalsongcount(); i++){
 		cout << i + 1 << ". ";
 		songlist[i].dispData();
 	}
@@ -141,8 +160,35 @@ void Library::dispfavSongs() {
 		}
 	}
 }
-// Depends on addData()
-void Library::addSong() {
+
+int Library::getglobalsongcount() {
+	ifstream countfile;
+	countfile.open("adminsongcount.txt");
+	countfile >> songcount;
+	return songcount;
+}
+
+void Library::incrementsongcount() {
+	fstream countfile;
+	countfile.open("adminsongcount.txt");
+	countfile >> songcount;
+	songcount++;
+	countfile << songcount;
+}
+
+// For ADMIN
+void Library::load() {
+	ifstream file, sfile;
+	file.open("adminsongcount.txt");
+	sfile.open("songs.dat", ios::binary);
+	file >> songcount;
+	for (int i = 0; i < songcount; i++) {
+		sfile.read((char*)&songlist[i], sizeof(Song));
+	}
+}
+
+void Library::adminAddSong() {
+	load();
 	char ch = 'n';
 	do {
 		songlist[songcount].addData();
@@ -150,6 +196,92 @@ void Library::addSong() {
 		cout << "Add more? [y/n] ";
 		cin >> ch;
 	} while(ch == 'y');
+	ofstream sfile, songcountfile;
+	sfile.open("songs.dat", ios::binary);
+	songcountfile.open("adminsongcount.txt");
+	for (int i = 0; i < songcount; i++) {
+		sfile.write((char*)&songlist[i], sizeof(Song));
+	}
+	songcountfile << songcount;
+}
+
+void Library::adminDelSong() {
+	int index_to_delete, i = 0;
+	Song ob;
+	load();
+	ifstream file;
+	ofstream tempobj;
+	fstream countfile;
+	file.open("songs.dat", ios::binary);
+	tempobj.open("temp.dat", ios::binary);
+	countfile.open("adminsongcount.txt");
+	if(!countfile) {
+		cout << "err: " << strerror(errno) << endl;
+	}
+	dispSongs();
+	cout << "Which song? ";
+	cin.ignore();
+	cin >> index_to_delete;
+	while (file.read((char*)&ob, sizeof(Song))) {
+		i++;
+		if (i != index_to_delete) {
+			tempobj.write((char*)&ob, sizeof(Song));
+			cout << "wrote ";
+		}
+	}
+	countfile >> songcount;
+	cout << "count: " << songcount;
+	songcount--;
+	countfile.close();
+	remove("adminsongcount.txt");
+	ofstream cf("adminsongcount.txt");
+	cf << songcount;
+	file.close();
+	tempobj.close();
+	remove("songs.dat");
+	if(rename("temp.dat", "songs.dat") == -1) {
+		cout << "Error: " << strerror(errno) << endl;
+	}
+}
+
+
+// For Users
+void Library::addSong() {
+	system("clear");
+	ifstream sfile;
+	sfile.open("songs.dat", ios::binary);
+	Song temp;
+	int ch;
+	cout << "Obtaining songs\n";
+	int i = 1;
+	cout<<"No.";
+	cout<<setw(15)<<"Title";
+	cout<<setw(15)<<"Artist";
+	cout<<setw(15)<<"Album";
+	cout<<setw(15)<<"Duration";
+	cout<<"\n";
+	while (sfile.read((char*)&temp, sizeof(Song))) {
+		cout << i;
+		temp.dispData();
+		i++;
+	}
+	cout << "Select a song:\n";
+	cin >> ch;
+	sfile.clear();
+	sfile.seekg((ch - 1) * sizeof(Song), ios::beg);
+	sfile.read((char*)&temp, sizeof(Song));
+	for (int i = 0; i < songcount; i++) {
+		if (strcmp(songlist[i].gettitle(), temp.gettitle()) == 0) {
+			cout << "You already have this song!";
+			return;
+		}
+	}
+	songlist[songcount] = temp;
+	songcount++;
+	cout<<"Add another? (y/n)";
+	char choice = 'n';
+	cin>>choice;
+	if(choice == 'y') addSong();
 }
 
 void Library::editSong() {
@@ -193,7 +325,6 @@ class Playlist: public Library {
 		}
 		void setPlayName();
 		void dispPlayName(); // complete
-		void dispPlayAll();
 		void addSong(Song);
 		void delSong();
 };
@@ -205,12 +336,6 @@ void Playlist::setPlayName() {
 
 void Playlist::dispPlayName() {
 	cout<<playname<<" ("<<songcount<<" songs)";
-}
-
-void Playlist::dispPlayAll(){
-	cout<<"-------------------------------------------------------\n";
-	dispPlayName();
-	dispSongs();
 }
 
 // Is this function overloading attempt correct?
@@ -254,9 +379,11 @@ class User {
 
 		// Library function definitions
 		void addToLibrary();
+		void addToGlobalLibrary();
 		void editLibrary();
 		void viewLibrary();
 		void delFromLibrary();
+		void delFromGlobalLibrary();
 		Song getSong(int x);
 		void favSong(int song_index);
 
@@ -265,7 +392,7 @@ class User {
 		void dispPlayName();
 		void editPlaylist();
 		void delPlaylist();
-		void viewPlaylist(int);
+		void viewPlaylist();
 		static int usercount; // this is the static variable we deserve
 
 		// File handling
@@ -276,11 +403,12 @@ class User {
 		void storeAll(User *userobj);
 		void readAll(User *userobj);
 
-		int playlistcount;
+		static int playlistcount;
 		char isactivated; // Self explanatory - high quality comment
-}users[5];
+}users[5], admin;
 
 int User::usercount = 0;
+int User::playlistcount = 0;
 
 void User::setup() {
 	cout << "Enter your username (No spaces or special characters): ";
@@ -309,9 +437,15 @@ void User::dispFav() {
 	}
 	dispPlayName();
 }
+
 void User::addToLibrary() {
 	songs.addSong();
 	cout<<"\nYou currently have "<<songs.songcount<<" songs\n";
+}
+
+void User::addToGlobalLibrary(){
+	songs.adminAddSong();
+	cout<<"\nThere are currently "<<songs.getglobalsongcount()<<" songs in global Library\n";
 }
 
 void User::editLibrary() {
@@ -324,6 +458,10 @@ void User::viewLibrary(){
 
 void User::delFromLibrary() {
 	songs.delSong();
+}
+
+void User::delFromGlobalLibrary() {
+	songs.adminDelSong();
 }
 
 void User::favSong(int song_index) {
@@ -356,12 +494,14 @@ void User::createPlaylist(){
 		plists[playlistcount].addSong(getSong(ch-1));
 		plists[playlistcount].songcount++;
 
-		cout<<"Add more songs?\n";
+		cout<<"Add more songs? [y/n]\n";
 		cin>>continue_adding;
 	}while(continue_adding == 'y');
 
 	system("clear");
+	cout<<"----------------";
 	plists[playlistcount].dispPlayName();
+	cout<<"----------------";
 	cout<<"\n";
 	plists[playlistcount].dispSongs();
 	playlistcount++;
@@ -382,6 +522,10 @@ void User::dispPlayName() {
 void User::editPlaylist() {
 	system("clear");
 	cout<<"Editing playlists\n";
+	if (playlistcount == 0) {
+		cout << "No playlists!";
+		return;
+	}
 	dispPlayName();
 
 	int ch;
@@ -398,7 +542,7 @@ void User::editPlaylist() {
 		cout<<"\n";
 		cout<<"1. Add song\n";
 		cout<<"2. Remove song\n";
-		cout<<"3. Change song name\n";
+		cout<<"3. Change playlist name\n";
 		cout<<"4. Back\n";
 
 		int edit_choice;
@@ -413,9 +557,10 @@ void User::editPlaylist() {
 				char continue_adding='y';
 
 				do{
+					int p_index = playlistcount - 1;
 					system("clear");
 					cout<<"----------------";
-					plists[playlistcount].dispPlayName();
+					plists[p_index].dispPlayName();
 					cout<<"----------------";
 					cout<<"\n";
 
@@ -423,11 +568,11 @@ void User::editPlaylist() {
 
 					int ch;
 					cout<<"\nEnter song to be added to ";
-					plists[playlistcount].dispPlayName();
+					plists[p_index].dispPlayName();
 					cout<<"\n";
 					cin>>ch;
-					plists[playlistcount].addSong(getSong(ch-1));
-					plists[playlistcount].songcount++;
+					plists[p_index].addSong(getSong(ch-1));
+					plists[p_index].songcount++;
 
 					cout<<"Add more songs?\n";
 					cin>>continue_adding;
@@ -470,8 +615,18 @@ void User::delPlaylist() {
 	playlistcount--;
 }
 
-void User::viewPlaylist(int i){
-	plists[i].dispPlayAll();
+void User::viewPlaylist(){
+	if(playlistcount == 0){
+		cout<<"No playlists!\n";
+	}
+	else:{
+		cout<<"Which playlist?";
+		dispPlayName();
+		int ch;
+		cin>>ch;
+		ch--;
+		plists[ch].dispSongs();
+	}
 }
 
 void User::storeUsercount() {
@@ -563,9 +718,10 @@ Playlist actions
 	// enter user select
 	char quit_program = 'n';
 	do{
+a:
 		char ch;
 		system("clear");
-		cout << "1. New User\n2. Existing User\n3. Quit Program\n";
+		cout << "1. New User\n2. Existing User\n3. Admin User\n4. Quit Program\n";
 		cin >> ch;
 		if (ch == '1') {
 			int i = 0;
@@ -581,11 +737,64 @@ Playlist actions
 			users[i].storeAll(users);
 		}
 		else if(ch == '3'){
+b:
+			system("clear");
+			cout<<"\nWelcome to Admin\n";
+			cout<<"1. Add to global library\n";
+			// cout<<"2. Edit songs from global library\n";
+			cout<<"2. Remove songs from global library\n";
+			cout<<"4. Back\n";
+			cout<<"\n Choose a option...";
+
+			int admin_choice = -1;
+			cin>>admin_choice;
+
+			char quit_admin = 'n';
+
+			switch(admin_choice){
+				case 1:
+					cout<<"Adding songs to global library\n";
+					admin.addToGlobalLibrary();
+					break;
+				/*
+				case 2:
+					cout<<"Editing songs from global library\n";
+					admin.editLibrary();
+					break;
+				*/
+				case 2:
+					cout<<"Removing songs from global library\n";
+					admin.delFromGlobalLibrary();
+					break;
+				case 4:
+					quit_admin = 'y';
+					break;
+			}
+
+			if(quit_admin == 'n'){
+				cout<<"Quit Admin? [y/n]\n";
+				cin>>quit_admin;
+			}
+			if(quit_admin == 'n'){
+				goto b;
+			}
+			else if(quit_admin == 'y'){
+				goto a;
+			}
+
+		}
+		else if(ch == '4'){
 			exit(0);
 		}
 
-
 		users[0].readAll(users); // loads all users
+		if (User::usercount == 0) {
+			cout << "No users!";
+			cin.ignore();
+			cin.ignore();
+			goto a;
+		}
+		system("clear");
 		cout << "Currently Active Users: " << User::usercount;
 		for(int i = 0; i < User::usercount; i++) {
 			// this will make sure only existing users show up
@@ -632,9 +841,8 @@ Playlist actions
 						users[choose_user].viewLibrary();
 						cout<<"\n-------Library actions-------\n";
 						cout<<"1. Add songs\n";
-						cout<<"2. Edit songs\n";
-						cout<<"3. Delete songs\n";
-						cout<<"4. Back\n";
+						cout<<"2. Delete songs\n";
+						cout<<"3. Back\n";
 
 						int lib_action;
 						cin>>lib_action;
@@ -644,12 +852,9 @@ Playlist actions
 								users[choose_user].addToLibrary();
 								break;
 							case 2:
-								users[choose_user].editLibrary();
-								break;
-							case 3:
 								users[choose_user].delFromLibrary();
 								break;
-							case 4:
+							case 3:
 								quit_lib_actions = 'y';
 								break;
 							default:
@@ -672,14 +877,12 @@ Playlist actions
 					// enter play actions
 					do{
 						system("clear");
-						for(int i=0; i<users[choose_user].playlistcount; i++){
-							users[choose_user].viewPlaylist(i);
-						}
 						cout<<"-------Playlist actions-------\n";
 						cout<<"1. Create playlist\n";
 						cout<<"2. Edit existing playlist\n";
 						cout<<"3. Delete playlist\n";
-						cout<<"4. Back\n";
+						cout<<"4. View playlist\n";
+						cout<<"5. Back\n";
 
 						int play_action;
 						cin>>play_action;
@@ -695,6 +898,9 @@ Playlist actions
 								users[choose_user].delPlaylist();
 								break;
 							case 4:
+								users[choose_user].viewPlaylist();
+								break;
+							case 5:
 								quit_play_actions = 'y';
 								break;
 							default:
@@ -706,6 +912,7 @@ Playlist actions
 							cin>>quit_play_actions;
 						}
 					} while (quit_play_actions == 'n');
+					users[0].storeAll(users);
 					break;
 				}
 				case 3:{
