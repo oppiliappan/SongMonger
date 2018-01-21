@@ -47,7 +47,7 @@ void Song::addData(){
 	cout<<"Enter album: ";
 	//fgets(album, 20, stdin);
 	cin>>album;
-	cout<<"Enter duration (sec.): ";
+	cout<<"Enter duration (min.): ";
 	cin>>duration;
 }
 
@@ -259,6 +259,7 @@ void Library::addSong() {
 	cout<<setw(15)<<"Artist";
 	cout<<setw(15)<<"Album";
 	cout<<setw(15)<<"Duration";
+	cout<<"\n";
 	while (sfile.read((char*)&temp, sizeof(Song))) {
 		cout << i;
 		temp.dispData();
@@ -497,7 +498,9 @@ void User::createPlaylist(){
 	}while(continue_adding == 'y');
 
 	system("clear");
+	cout<<"----------------";
 	plists[playlistcount].dispPlayName();
+	cout<<"----------------";
 	cout<<"\n";
 	plists[playlistcount].dispSongs();
 	playlistcount++;
@@ -508,7 +511,7 @@ void User::dispPlayName() {
 	if (User::playlistcount == 0) cout<<"No playlists\n";
 	else{
 		for(int i=0; i<playlistcount; i++){
-			cout<<i + 1<<" ";
+			cout<<i + 1<<". ";
 			plists[i].dispPlayName();
 			cout<<"\n";
 		}
@@ -609,6 +612,14 @@ void User::delPlaylist() {
 		if(i < sizeof(Playlist)/2) plists[i] = plists[i + 1]; // if statement prevents segmentation faults
 	}
 	playlistcount--;
+}
+
+void User::viewPlaylist(){
+	cout<<"Which playlist?";
+	dispPlayName();
+	int ch;
+	cin>>ch;
+	plists[ch].dispSongs();
 }
 
 void User::storeUsercount() {
@@ -863,6 +874,7 @@ b:
 						cout<<"1. Create playlist\n";
 						cout<<"2. Edit existing playlist\n";
 						cout<<"3. Delete playlist\n";
+						cout<<"4. View playlist\n";
 						cout<<"4. Back\n";
 
 						int play_action;
@@ -879,6 +891,9 @@ b:
 								users[choose_user].delPlaylist();
 								break;
 							case 4:
+								users[choose_user].viewPlaylist();
+								break;
+							case 5:
 								quit_play_actions = 'y';
 								break;
 							default:
